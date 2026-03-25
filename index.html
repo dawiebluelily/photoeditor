@@ -207,6 +207,14 @@
       margin-top: 14px;
     }
 
+    .auto-edit-row {
+      margin: 14px 0 16px;
+    }
+
+    .auto-edit-row .btn {
+      min-width: 170px;
+    }
+
     button,
     .ghost-link,
     select,
@@ -605,6 +613,122 @@
       line-height: 1.5;
     }
 
+
+    .markup-layer {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 4;
+    }
+
+    .markup-layer.active {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    .markup-zone {
+      position: absolute;
+      border: 2px solid rgba(24, 136, 227, 0.95);
+      background: rgba(24, 136, 227, 0.16);
+      border-radius: 10px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
+      overflow: hidden;
+    }
+
+    .markup-zone.preview {
+      border-style: dashed;
+      background: rgba(24, 136, 227, 0.10);
+    }
+
+    .markup-zone-label {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      max-width: calc(100% - 16px);
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(7, 31, 70, 0.82);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ai-box {
+      margin-top: 0;
+      background: linear-gradient(180deg, #f9fdff, #f2f9ff);
+      border-color: rgba(48, 122, 219, 0.18);
+    }
+
+    .zone-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .zone-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .zone-item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .zone-item input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 11px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 104px;
+      line-height: 1.5;
+    }
+
+    textarea[readonly] {
+      background: #fbfdff;
+    }
+
+    .declutter-status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .ai-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .micro-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     @media (max-width: 1280px) {
       .layout {
         grid-template-columns: 300px minmax(0, 1fr);
@@ -627,7 +751,8 @@
       }
       .canvas-grid,
       .preset-grid,
-      .select-row {
+      .select-row,
+      .ai-actions {
         grid-template-columns: 1fr;
       }
       .canvas-box { min-height: 260px; }
@@ -729,8 +854,9 @@
                   <strong>Edited</strong>
                   <span id="editedMeta">—</span>
                 </div>
-                <div class="canvas-box">
+                <div class="canvas-box" id="editedCanvasBox">
                   <canvas id="editedCanvas"></canvas>
+                  <div class="markup-layer" id="editedMarkupLayer"></div>
                   <div class="overlay-grid" id="editedGrid"></div>
                 </div>
               </div>
@@ -749,6 +875,16 @@
           <div class="analysis-box" id="analysisBox">
             <strong>Waiting for photo.</strong><br>
             Suggested adjustments will appear here after you load an image.
+          </div>
+
+          <div class="select-row auto-edit-row">
+            <select id="autoStrengthSelect">
+              <option value="90">Natural auto edit</option>
+              <option value="120" selected>Balanced auto edit</option>
+              <option value="145">Stronger auto edit</option>
+              <option value="170">Bright portal auto edit</option>
+            </select>
+            <button class="btn primary" id="runAutoEditBtn" disabled>Run auto edit</button>
           </div>
 
           <div class="preset-grid">
@@ -771,7 +907,7 @@
           </div>
 
           <div class="quick-actions">
-            <button class="btn soft" id="analyzeBtn" disabled>Re-analyze photo</button>
+            <button class="btn soft" id="analyzeBtn" disabled>Rebuild auto settings</button>
             <button class="btn" id="applyCurrentToAllBtn" disabled>Apply current settings to all</button>
           </div>
 
@@ -783,6 +919,52 @@
           <div class="control-group">
             <h4>Detail and geometry</h4>
             <div id="detailControls"></div>
+          </div>
+
+          <div class="control-group">
+            <h4>Declutter and special ChatGPT request</h4>
+            <div class="analysis-box ai-box">
+              <strong>Mark clutter or specific change areas.</strong><br>
+              Draw boxes on the edited preview for distractions or change zones, type extra instructions, and build a strict ChatGPT-ready prompt.
+            </div>
+            <div class="select-row">
+              <select id="promptPresetSelect">
+                <option value="property24" selected>Property24 strict edit</option>
+                <option value="luxury">Luxury clean edit</option>
+                <option value="rental">Rental bright clean edit</option>
+                <option value="declutter">Declutter only</option>
+                <option value="special">Special custom prompt</option>
+              </select>
+              <button class="btn" id="toggleDeclutterBtn" disabled>Start declutter marking</button>
+            </div>
+            <div class="quick-actions">
+              <button class="btn soft" id="clearZonesBtn" disabled>Clear marked zones</button>
+              <button class="btn" id="buildPromptBtn" disabled>Build ChatGPT prompt</button>
+            </div>
+            <div class="declutter-status" id="declutterStatus">No declutter zones marked.</div>
+            <div class="zone-list" id="zoneList"></div>
+            <div class="control">
+              <div class="label-row">
+                <label for="customChangeInput">Specify extra changes</label>
+                <div class="value">Optional</div>
+              </div>
+              <textarea id="customChangeInput" placeholder="Example: Remove the mop bucket by the doorway, tidy the kitchen counter, keep all cupboards, paint colours, fittings and structure exactly the same."></textarea>
+            </div>
+            <div class="ai-actions">
+              <button class="btn primary" id="copyPromptBtn" disabled>Copy prompt</button>
+              <button class="btn primary" id="openChatgptBtn" disabled>Copy + open ChatGPT</button>
+              <button class="btn" id="downloadPromptBtn" disabled>Download prompt TXT</button>
+            </div>
+            <div class="control">
+              <div class="label-row">
+                <label for="promptOutput">ChatGPT prompt</label>
+                <div class="value">Generated</div>
+              </div>
+              <textarea id="promptOutput" readonly placeholder="Build a prompt after marking zones or typing instructions."></textarea>
+            </div>
+            <div class="micro-note">
+              This generates a ChatGPT-ready request. A standalone HTML file cannot automatically inject the image and prompt into this same chat, so the app copies the prompt and can open ChatGPT in a new tab.
+            </div>
           </div>
 
           <div class="control-group">
@@ -848,6 +1030,9 @@
       viewMode: 'split',
       showGrid: false,
       renderToken: 0,
+      declutterMode: false,
+      drawStart: null,
+      draftZone: null,
     };
 
     const queueList = document.getElementById('queueList');
@@ -866,8 +1051,22 @@
     const editedCard = document.getElementById('editedCard');
     const originalGrid = document.getElementById('originalGrid');
     const editedGrid = document.getElementById('editedGrid');
+    const editedCanvasBox = document.getElementById('editedCanvasBox');
+    const editedMarkupLayer = document.getElementById('editedMarkupLayer');
 
     const analyzeBtn = document.getElementById('analyzeBtn');
+    const promptPresetSelect = document.getElementById('promptPresetSelect');
+    const toggleDeclutterBtn = document.getElementById('toggleDeclutterBtn');
+    const clearZonesBtn = document.getElementById('clearZonesBtn');
+    const buildPromptBtn = document.getElementById('buildPromptBtn');
+    const zoneList = document.getElementById('zoneList');
+    const declutterStatus = document.getElementById('declutterStatus');
+    const customChangeInput = document.getElementById('customChangeInput');
+    const promptOutput = document.getElementById('promptOutput');
+    const copyPromptBtn = document.getElementById('copyPromptBtn');
+    const openChatgptBtn = document.getElementById('openChatgptBtn');
+    const downloadPromptBtn = document.getElementById('downloadPromptBtn');
+    const runAutoEditBtn = document.getElementById('runAutoEditBtn');
     const applyCurrentToAllBtn = document.getElementById('applyCurrentToAllBtn');
     const applySuggestedToAllBtn = document.getElementById('applySuggestedToAllBtn');
     const copySettingsBtn = document.getElementById('copySettingsBtn');
@@ -916,6 +1115,7 @@
           if (!photo) return;
           const preset = PRESETS[btn.dataset.preset];
           photo.settings = mergeSettings(preset);
+          photo.autoEdited = true;
           photo.status = 'ready';
           updateControlValues(photo.settings);
           refreshQueue();
@@ -926,7 +1126,7 @@
       analyzeBtn.addEventListener('click', () => {
         const photo = getCurrentPhoto();
         if (!photo) return;
-        applySuggestedSettings(photo, true);
+        applySuggestedSettings(photo, true, getAutoStrength());
       });
 
       applyCurrentToAllBtn.addEventListener('click', () => {
@@ -940,8 +1140,15 @@
         refreshQueue();
       });
 
+      runAutoEditBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        applySuggestedSettings(photo, true, getAutoStrength());
+      });
+
       applySuggestedToAllBtn.addEventListener('click', () => {
-        state.photos.forEach(photo => applySuggestedSettings(photo, false));
+        const strength = getAutoStrength();
+        state.photos.forEach(photo => applySuggestedSettings(photo, false, strength));
         if (state.currentId !== null) {
           const current = getCurrentPhoto();
           updateControlValues(current.settings);
@@ -961,6 +1168,7 @@
         const photo = getCurrentPhoto();
         if (!photo || !state.copiedSettings) return;
         photo.settings = mergeSettings(state.copiedSettings);
+        photo.autoEdited = true;
         photo.status = 'ready';
         updateControlValues(photo.settings);
         refreshQueue();
@@ -970,7 +1178,7 @@
       resetPhotoBtn.addEventListener('click', () => {
         const photo = getCurrentPhoto();
         if (!photo) return;
-        photo.settings = mergeSettings(photo.suggestedSettings);
+        photo.settings = mergeSettings(photo.autoEdited ? photo.suggestedSettings : {});
         photo.status = 'ready';
         updateControlValues(photo.settings);
         refreshQueue();
@@ -1007,6 +1215,110 @@
         if (!state.photos.length) return;
         await exportPhotos(state.photos, true);
       });
+
+      promptPresetSelect.addEventListener('change', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.promptPreset = promptPresetSelect.value;
+        refreshPromptPanel();
+      });
+
+      customChangeInput.addEventListener('input', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.customPrompt = customChangeInput.value;
+        photo.builtPrompt = '';
+        refreshPromptPanel();
+      });
+
+      toggleDeclutterBtn.addEventListener('click', () => {
+        if (!getCurrentPhoto()) return;
+        state.declutterMode = !state.declutterMode;
+        state.drawStart = null;
+        state.draftZone = null;
+        refreshPromptPanel();
+        renderAiZones();
+      });
+
+      clearZonesBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.aiZones = [];
+        photo.builtPrompt = '';
+        refreshPromptPanel();
+        renderAiZones();
+      });
+
+      buildPromptBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.builtPrompt = buildChatGptPrompt(photo);
+        promptOutput.value = photo.builtPrompt;
+        refreshPromptPanel();
+      });
+
+      copyPromptBtn.addEventListener('click', async () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        if (!photo.builtPrompt) {
+          photo.builtPrompt = buildChatGptPrompt(photo);
+          promptOutput.value = photo.builtPrompt;
+        }
+        await copyText(photo.builtPrompt);
+      });
+
+      openChatgptBtn.addEventListener('click', async () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        if (!photo.builtPrompt) {
+          photo.builtPrompt = buildChatGptPrompt(photo);
+          promptOutput.value = photo.builtPrompt;
+        }
+        await copyText(photo.builtPrompt);
+        window.open('https://chatgpt.com/', '_blank', 'noopener');
+      });
+
+      downloadPromptBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        if (!photo.builtPrompt) {
+          photo.builtPrompt = buildChatGptPrompt(photo);
+          promptOutput.value = photo.builtPrompt;
+        }
+        const blob = new Blob([photo.builtPrompt], { type: 'text/plain;charset=utf-8' });
+        downloadBlob(blob, `${photo.name.replace(/\.[^.]+$/, '')}_chatgpt_prompt.txt`);
+      });
+
+      zoneList.addEventListener('input', (e) => {
+        const photo = getCurrentPhoto();
+        const input = e.target.closest('input[data-zone-index]');
+        if (!photo || !input) return;
+        const idx = Number(input.dataset.zoneIndex);
+        if (!photo.aiZones[idx]) return;
+        photo.aiZones[idx].label = input.value;
+        photo.builtPrompt = '';
+        renderAiZones();
+      });
+
+      zoneList.addEventListener('click', (e) => {
+        const photo = getCurrentPhoto();
+        const btn = e.target.closest('button[data-remove-zone]');
+        if (!photo || !btn) return;
+        const idx = Number(btn.dataset.removeZone);
+        photo.aiZones.splice(idx, 1);
+        photo.builtPrompt = '';
+        refreshPromptPanel();
+        renderAiZones();
+      });
+
+      editedMarkupLayer.addEventListener('pointerdown', startZoneDraw);
+      editedMarkupLayer.addEventListener('pointermove', moveZoneDraw);
+      editedMarkupLayer.addEventListener('pointerup', endZoneDraw);
+      editedMarkupLayer.addEventListener('pointerleave', endZoneDraw);
+      window.addEventListener('resize', () => {
+        fitMarkupLayerToCanvas();
+        renderAiZones();
+      });
     }
 
     function buildControls() {
@@ -1027,6 +1339,7 @@
           if (!photo) return;
           const value = Number(e.target.value);
           photo.settings[ctrl.key] = value;
+          photo.autoEdited = true;
           photo.status = 'ready';
           document.getElementById(`val-${ctrl.key}`).textContent = ctrl.suffix(value);
           refreshQueue();
@@ -1055,8 +1368,14 @@
           stats: null,
           suggestedSettings: mergeSettings({}),
           settings: mergeSettings({}),
+          autoEdited: false,
+          lastAutoStrength: null,
           originalPreviewCanvas: null,
           editedPreviewCanvas: null,
+          aiZones: [],
+          customPrompt: '',
+          promptPreset: 'property24',
+          builtPrompt: '',
         };
         state.photos.push(photo);
       });
@@ -1072,8 +1391,9 @@
         if (photo.image) continue;
         photo.image = await loadImage(photo.file);
         photo.stats = analyzeImage(photo.image);
-        photo.suggestedSettings = suggestSettings(photo.stats);
-        photo.settings = mergeSettings(photo.suggestedSettings);
+        photo.suggestedSettings = buildAutoSettings(photo.stats, getAutoStrength());
+        photo.settings = mergeSettings({});
+        photo.autoEdited = false;
         photo.status = 'ready';
       }
 
@@ -1184,15 +1504,15 @@
     }
 
     function suggestSettings(stats) {
-      const exposure = clamp(Math.round((132 - stats.avgLum) * 0.16), -8, 18);
-      const shadows = clamp(Math.round((0.22 - stats.darkRatio) * -120), -8, 24);
-      const highlights = clamp(Math.round((stats.brightRatio - 0.16) * -90), -24, 10);
-      const contrast = clamp(Math.round((118 - (stats.p90 - stats.p10)) * 0.08), -8, 12);
-      const warmth = clamp(Math.round((stats.whiteBalanceBias * -0.07)), -10, 10);
-      const vibrance = clamp(Math.round((0.22 - stats.saturation) * 40), 0, 14);
-      const saturation = clamp(stats.outdoorLikelihood > 0.45 ? 2 : 4, -5, 8);
-      const clarity = clamp(Math.round(8 - stats.detailScore * 0.04), 4, 10);
-      const sharpen = clamp(Math.round(7 - stats.detailScore * 0.02), 4, 9);
+      const exposure = clamp(Math.round((132 - stats.avgLum) * 0.16), -10, 20);
+      const shadows = clamp(Math.round((0.22 - stats.darkRatio) * -120), -10, 26);
+      const highlights = clamp(Math.round((stats.brightRatio - 0.16) * -90), -26, 12);
+      const contrast = clamp(Math.round((118 - (stats.p90 - stats.p10)) * 0.08), -10, 14);
+      const warmth = clamp(Math.round((stats.whiteBalanceBias * -0.07)), -12, 12);
+      const vibrance = clamp(Math.round((0.22 - stats.saturation) * 40), 0, 16);
+      const saturation = clamp(stats.outdoorLikelihood > 0.45 ? 2 : 4, -6, 10);
+      const clarity = clamp(Math.round(8 - stats.detailScore * 0.04), 4, 11);
+      const sharpen = clamp(Math.round(7 - stats.detailScore * 0.02), 4, 10);
 
       return mergeSettings({
         exposure,
@@ -1210,10 +1530,32 @@
       });
     }
 
-    function applySuggestedSettings(photo, rerender = true) {
+    function getAutoStrength() {
+      return Number(document.getElementById('autoStrengthSelect').value || 120);
+    }
+
+    function scaleSettings(baseSettings, strengthPercent) {
+      const factor = strengthPercent / 100;
+      const scaled = mergeSettings(baseSettings);
+      const scalableKeys = ['exposure', 'contrast', 'highlights', 'shadows', 'saturation', 'warmth', 'vibrance', 'clarity', 'sharpen'];
+      scalableKeys.forEach(key => {
+        const ctrl = CONTROLS.find(item => item.key === key);
+        if (!ctrl) return;
+        scaled[key] = clamp(Math.round(baseSettings[key] * factor), ctrl.min, ctrl.max);
+      });
+      return scaled;
+    }
+
+    function buildAutoSettings(stats, strengthPercent) {
+      return scaleSettings(suggestSettings(stats), strengthPercent);
+    }
+
+    function applySuggestedSettings(photo, rerender = true, strengthPercent = 120) {
       if (!photo.stats) return;
-      photo.suggestedSettings = suggestSettings(photo.stats);
+      photo.suggestedSettings = buildAutoSettings(photo.stats, strengthPercent);
       photo.settings = mergeSettings(photo.suggestedSettings);
+      photo.autoEdited = true;
+      photo.lastAutoStrength = strengthPercent;
       photo.status = 'ready';
       if (getCurrentPhoto()?.id === photo.id) {
         updateControlValues(photo.settings);
@@ -1269,6 +1611,7 @@
       const photo = getCurrentPhoto();
       if (!photo) return;
       updateControlValues(photo.settings);
+      refreshPromptPanel();
       renderCurrentPhoto();
       refreshQueue();
       refreshUI();
@@ -1281,6 +1624,7 @@
 
       applyCurrentToAllBtn.disabled = !photo;
       applySuggestedToAllBtn.disabled = !hasPhotos;
+      runAutoEditBtn.disabled = !photo;
       analyzeBtn.disabled = !photo;
       copySettingsBtn.disabled = !photo;
       pasteSettingsBtn.disabled = !photo || !state.copiedSettings;
@@ -1291,18 +1635,24 @@
       exportCurrentBtn.disabled = !photo;
       exportReviewedBtn.disabled = !hasReviewed;
       exportAllBtn.disabled = !hasPhotos;
+      toggleDeclutterBtn.disabled = !photo;
+      clearZonesBtn.disabled = !photo || !(photo.aiZones && photo.aiZones.length);
+      buildPromptBtn.disabled = !photo;
 
       viewerEmpty.style.display = photo ? 'none' : 'block';
       viewerContent.style.display = photo ? 'block' : 'none';
 
       if (photo) {
-        currentFileLabel.textContent = `${photo.name} • Review this edit before exporting.`;
+        currentFileLabel.textContent = photo.autoEdited
+          ? `${photo.name} • Auto edit has been applied. Review this before exporting.`
+          : `${photo.name} • Click Run auto edit, then fine-tune the sliders.`;
         analysisBox.innerHTML = buildAnalysisHtml(photo);
       } else {
         currentFileLabel.textContent = '';
         analysisBox.innerHTML = '<strong>Waiting for photo.</strong><br>Suggested adjustments will appear here after you load an image.';
       }
 
+      refreshPromptPanel();
       updateViewMode();
     }
 
@@ -1317,6 +1667,10 @@
         originalCard.style.display = 'block';
         editedCard.style.display = 'none';
       }
+      requestAnimationFrame(() => {
+        fitMarkupLayerToCanvas();
+        renderAiZones();
+      });
     }
 
     async function renderCurrentPhoto() {
@@ -1325,7 +1679,7 @@
       const token = ++state.renderToken;
 
       originalMeta.textContent = `${photo.stats.width} × ${photo.stats.height}`;
-      editedMeta.textContent = `Preview with current settings`;
+      editedMeta.textContent = photo.autoEdited ? `Edited preview • ${photo.lastAutoStrength || getAutoStrength()}% auto strength applied` : `No auto edit run yet`;
 
       const originalPreview = renderToCanvas(photo.image, mergeSettings({}), 1400, false);
       if (token !== state.renderToken) return;
@@ -1336,6 +1690,8 @@
       if (token !== state.renderToken) return;
       drawCanvasToCanvas(editedPreview, editedCanvas);
       fitOverlayToCanvas(editedGrid, editedCanvas);
+      fitMarkupLayerToCanvas();
+      renderAiZones();
 
       photo.originalPreviewCanvas = originalPreview;
       photo.editedPreviewCanvas = editedPreview;
@@ -1600,6 +1956,219 @@
       downloadBlob(content, `property-photo-${suffix}.zip`);
     }
 
+    function fitMarkupLayerToCanvas() {
+      if (!editedCanvasBox || !editedMarkupLayer || !editedCanvas.width || !editedCanvas.height) {
+        editedMarkupLayer.style.display = 'none';
+        return;
+      }
+      const canvasRect = editedCanvas.getBoundingClientRect();
+      const boxRect = editedCanvasBox.getBoundingClientRect();
+      editedMarkupLayer.style.display = 'block';
+      editedMarkupLayer.style.left = `${canvasRect.left - boxRect.left}px`;
+      editedMarkupLayer.style.top = `${canvasRect.top - boxRect.top}px`;
+      editedMarkupLayer.style.width = `${canvasRect.width}px`;
+      editedMarkupLayer.style.height = `${canvasRect.height}px`;
+    }
+
+    function refreshPromptPanel() {
+      const photo = getCurrentPhoto();
+      const hasPhoto = !!photo;
+      const zones = photo?.aiZones || [];
+      const built = photo?.builtPrompt || '';
+      promptPresetSelect.disabled = !hasPhoto;
+      customChangeInput.disabled = !hasPhoto;
+      promptPresetSelect.value = hasPhoto ? (photo.promptPreset || 'property24') : 'property24';
+      customChangeInput.value = hasPhoto ? (photo.customPrompt || '') : '';
+      promptOutput.value = built;
+      copyPromptBtn.disabled = !hasPhoto;
+      openChatgptBtn.disabled = !hasPhoto;
+      downloadPromptBtn.disabled = !hasPhoto;
+      editedMarkupLayer.classList.toggle('active', !!hasPhoto && state.declutterMode);
+      toggleDeclutterBtn.textContent = state.declutterMode ? 'Stop declutter marking' : 'Start declutter marking';
+
+      if (!hasPhoto) {
+        declutterStatus.textContent = 'No photo loaded yet.';
+        zoneList.innerHTML = '';
+        editedMarkupLayer.classList.remove('active');
+        return;
+      }
+
+      declutterStatus.textContent = zones.length
+        ? `${zones.length} marked zone${zones.length === 1 ? '' : 's'} on this photo.${state.declutterMode ? ' Drag on the edited preview to add more.' : ''}`
+        : (state.declutterMode ? 'Declutter marking is on. Drag on the edited preview to mark a change area.' : 'No declutter zones marked.');
+
+      zoneList.innerHTML = zones.map((zone, idx) => `
+        <div class="zone-item">
+          <div class="zone-item-head">
+            <strong>Zone ${idx + 1}</strong>
+            <span>${escapeHtml(zonePositionLabel(zone))}</span>
+          </div>
+          <input type="text" data-zone-index="${idx}" value="${escapeHtml(zone.label || `Remove clutter in zone ${idx + 1}`)}" />
+          <button class="btn danger" data-remove-zone="${idx}">Remove zone</button>
+        </div>
+      `).join('');
+    }
+
+    function startZoneDraw(e) {
+      if (!state.declutterMode || !getCurrentPhoto()) return;
+      const pt = getLayerPoint(e);
+      if (!pt) return;
+      state.drawStart = pt;
+      state.draftZone = { x: pt.x, y: pt.y, w: 0, h: 0 };
+      renderAiZones();
+    }
+
+    function moveZoneDraw(e) {
+      if (!state.declutterMode || !state.drawStart || !getCurrentPhoto()) return;
+      const pt = getLayerPoint(e);
+      if (!pt) return;
+      state.draftZone = normalizeRect(state.drawStart.x, state.drawStart.y, pt.x, pt.y);
+      renderAiZones();
+    }
+
+    function endZoneDraw(e) {
+      if (!state.declutterMode || !state.drawStart || !getCurrentPhoto()) return;
+      const photo = getCurrentPhoto();
+      const pt = getLayerPoint(e) || state.drawStart;
+      const rect = normalizeRect(state.drawStart.x, state.drawStart.y, pt.x, pt.y);
+      state.drawStart = null;
+      state.draftZone = null;
+      if (rect.w >= 0.03 && rect.h >= 0.03) {
+        photo.aiZones.push({
+          x: rect.x,
+          y: rect.y,
+          w: rect.w,
+          h: rect.h,
+          label: `Remove clutter in ${zonePositionLabel(rect)}`,
+        });
+        photo.builtPrompt = '';
+      }
+      refreshPromptPanel();
+      renderAiZones();
+    }
+
+    function getLayerPoint(e) {
+      const rect = editedMarkupLayer.getBoundingClientRect();
+      if (!rect.width || !rect.height) return null;
+      return {
+        x: clamp01((e.clientX - rect.left) / rect.width),
+        y: clamp01((e.clientY - rect.top) / rect.height),
+      };
+    }
+
+    function normalizeRect(x1, y1, x2, y2) {
+      const x = Math.min(x1, x2);
+      const y = Math.min(y1, y2);
+      const w = Math.abs(x2 - x1);
+      const h = Math.abs(y2 - y1);
+      return { x: clamp01(x), y: clamp01(y), w: clamp01(w), h: clamp01(h) };
+    }
+
+    function renderAiZones() {
+      const photo = getCurrentPhoto();
+      fitMarkupLayerToCanvas();
+      if (!photo || editedMarkupLayer.style.display === 'none') {
+        editedMarkupLayer.innerHTML = '';
+        return;
+      }
+      const zones = [...(photo.aiZones || [])];
+      const html = zones.map((zone, idx) => zoneToHtml(zone, idx + 1, false)).join('')
+        + (state.draftZone ? zoneToHtml(state.draftZone, zones.length + 1, true) : '');
+      editedMarkupLayer.innerHTML = html;
+    }
+
+    function zoneToHtml(zone, number, preview) {
+      const left = clamp01(zone.x) * 100;
+      const top = clamp01(zone.y) * 100;
+      const width = clamp01(zone.w) * 100;
+      const height = clamp01(zone.h) * 100;
+      const label = preview ? 'Drawing zone' : escapeHtml(zone.label || `Zone ${number}`);
+      return `
+        <div class="markup-zone ${preview ? 'preview' : ''}" style="left:${left}%; top:${top}%; width:${width}%; height:${height}%;">
+          <div class="markup-zone-label">${label}</div>
+        </div>
+      `;
+    }
+
+    function zonePositionLabel(zone) {
+      const cx = zone.x + zone.w / 2;
+      const cy = zone.y + zone.h / 2;
+      const vertical = cy < 0.33 ? 'top' : cy > 0.66 ? 'bottom' : 'centre';
+      const horizontal = cx < 0.33 ? 'left' : cx > 0.66 ? 'right' : 'centre';
+      return horizontal === 'centre' && vertical === 'centre'
+        ? 'centre'
+        : `${vertical}-${horizontal}`.replace('centre-', '').replace('-centre', '');
+    }
+
+    function buildChatGptPrompt(photo) {
+      const preset = photo.promptPreset || 'property24';
+      const custom = (photo.customPrompt || '').trim();
+      const zones = photo.aiZones || [];
+      const presetIntro = {
+        property24: 'You are a professional real estate photo editor. Edit this property photo in a clean, realistic Property24-style finish.',
+        luxury: 'You are a premium real estate photo editor. Edit this luxury property photo so it looks polished, bright and high-end, while staying completely realistic.',
+        rental: 'You are a professional rental listing photo editor. Edit this property photo so it feels bright, clean and portal-ready without looking fake.',
+        declutter: 'You are a professional photo editor. Only declutter and lightly clean this property photo while keeping everything structurally identical.',
+        special: 'You are a professional real estate photo editor. Follow the instructions below exactly and keep the final result realistic and listing-ready.',
+      };
+      const presetFocus = {
+        property24: 'Main goal: straighten lines, balance light, clean up small distractions, and keep the result natural.',
+        luxury: 'Main goal: refined premium presentation, subtle contrast, clean surfaces and believable luxury appeal.',
+        rental: 'Main goal: bright rental-portal presentation with realistic light and a clean, welcoming feel.',
+        declutter: 'Main goal: remove only the listed clutter or distractions, with minimal global editing.',
+        special: 'Main goal: make only the requested changes and preserve everything else exactly.',
+      };
+
+      const zoneLines = zones.length
+        ? zones.map((zone, idx) => `- Zone ${idx + 1} (${zonePositionLabel(zone)}): ${zone.label || `Remove clutter in zone ${idx + 1}`}.`).join('\n')
+        : '- No marked declutter zones were added. Use only the written instructions below.';
+
+      const extra = custom
+        ? `Specific extra change instructions:
+${custom}`
+        : `Specific extra change instructions:
+- No extra typed instructions were added beyond the preset and zone list.`;
+
+      return `${presetIntro[preset] || presetIntro.property24}
+
+Use the attached property photo as the source image. ${presetFocus[preset] || presetFocus.property24}
+
+Hard rules:
+- Do not change anything structurally.
+- Do not add, move, or remove walls, windows, doors, rooflines, cupboards, counters, vanities, toilets, showers, baths, built-in fixtures, paving, pools, or permanent features.
+- Do not change paint colours, flooring colours, cabinetry colours, or architectural finishes.
+- Do not change the camera angle or crop aggressively. Keep the same landscape composition and overall framing.
+- Keep the result realistic and professional. No obvious AI look.
+
+Global edits allowed:
+- Straighten verticals and correct mild perspective.
+- Balance exposure, white balance, highlights and shadows.
+- Clean up the image, improve clarity slightly, and keep colours natural.
+- Do very light decluttering only where requested below.
+
+Declutter or change zones:
+${zoneLines}
+
+${extra}
+
+Output requirement:
+- Return one final edited image only, in the same aspect ratio, suitable for a South African property listing.
+- Preserve every important property feature exactly unless it was specifically listed above as clutter to remove.`;
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const input = document.createElement('textarea');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        input.remove();
+      }
+    }
+
     function getCurrentPhoto() {
       return state.photos.find(photo => photo.id === state.currentId) || null;
     }
@@ -1609,6 +2178,9 @@
       state.photos = [];
       state.currentId = null;
       state.copiedSettings = null;
+      state.declutterMode = false;
+      state.drawStart = null;
+      state.draftZone = null;
       queueList.innerHTML = '';
       originalCanvas.width = 0;
       originalCanvas.height = 0;
@@ -1624,10 +2196,13 @@
       const scene = s.outdoorLikelihood > 0.45 ? 'Likely exterior photo.' : 'Likely interior photo.';
       const light = s.avgLum < 105 ? 'Room appears a bit dark.' : s.avgLum > 165 ? 'Image is already bright.' : 'Exposure sits in a usable middle range.';
       const wb = s.whiteBalanceBias > 12 ? 'Warm cast detected.' : s.whiteBalanceBias < -12 ? 'Cool cast detected.' : 'Colour balance looks fairly neutral.';
+      const readyLine = photo.autoEdited
+        ? `<strong>Auto edit applied:</strong> Exposure ${signed(photo.settings.exposure)}, Shadows ${signed(photo.settings.shadows)}, Highlights ${signed(photo.settings.highlights)}, Warmth ${signed(photo.settings.warmth)}.`
+        : `<strong>Next step:</strong> Choose an auto-edit strength and click <em>Run auto edit</em> so the edited preview actually changes.`;
       return `
         <strong>${scene}</strong><br>
         ${light} ${wb}<br><br>
-        <strong>Suggested start:</strong> Exposure ${signed(photo.suggestedSettings.exposure)}, Shadows ${signed(photo.suggestedSettings.shadows)}, Highlights ${signed(photo.suggestedSettings.highlights)}, Warmth ${signed(photo.suggestedSettings.warmth)}.<br>
+        ${readyLine}<br>
         Use the grid before exporting if walls or door frames still look off.
       `;
     }
