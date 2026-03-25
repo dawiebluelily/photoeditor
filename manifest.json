@@ -1,0 +1,20 @@
+{
+  "name": "Blue Lily Property Photo Review Studio",
+  "short_name": "Photo Review",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5fbff",
+  "theme_color": "#2b3f98",
+  "icons": [
+    {
+      "src": "assets/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

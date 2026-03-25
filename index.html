@@ -3,151 +3,2396 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blue Lily Photo Review</title>
+  <title>Blue Lily Property Photo Review Studio</title>
+  <meta name="theme-color" content="#2b3f98" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="apple-touch-icon" href="assets/logo-192.png" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+      --bg: #eef6ff;
+      --panel: #ffffff;
+      --panel-2: #f6fbff;
+      --text: #183057;
+      --muted: #61779c;
+      --line: #d5e6f7;
+      --accent: #2db8ff;
+      --accent-2: #2b3f98;
+      --success: #2f7b57;
+      --danger: #a14d3b;
+      --shadow: 0 16px 40px rgba(36, 73, 122, 0.10);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
+      background: linear-gradient(180deg, #f5fbff 0%, #edf5ff 100%);
+      color: var(--text);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.045;
+      background-image:
+        radial-gradient(circle at 20% 20%, #000 0.6px, transparent 0.8px),
+        radial-gradient(circle at 80% 40%, #000 0.7px, transparent 0.9px),
+        radial-gradient(circle at 30% 70%, #000 0.5px, transparent 0.7px);
+      background-size: 18px 18px, 22px 22px, 16px 16px;
+    }
+
+    .app {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--line);
+      padding: 8px;
+      box-shadow: 0 10px 22px rgba(43, 63, 152, 0.10);
+    }
+
+    .brand-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 4px;
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .title-wrap p {
+      margin: 10px 0 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.65);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      backdrop-filter: blur(6px);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px minmax(520px, 1fr) 380px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .panel-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(246,251,255,0.98));
+    }
+
+    .panel-head h2,
+    .panel-head h3 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .panel-body {
+      padding: 18px 20px 20px;
+    }
+
+    .dropzone {
+      border: 1.5px dashed #9cccf3;
+      background: linear-gradient(180deg, #ffffff, #f3f9ff);
+      border-radius: 16px;
+      padding: 24px 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .dropzone:hover,
+    .dropzone.dragover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(43, 63, 152, 0.12);
+    }
+
+    .dropzone .icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .dropzone strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .dropzone span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    #fileInput { display: none; }
+
+    .mini-actions,
+    .quick-actions,
+    .export-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .auto-edit-row {
+      margin: 14px 0 16px;
+    }
+
+    .auto-edit-row .btn {
+      min-width: 170px;
+    }
+
+    button,
+    .ghost-link,
+    select,
+    input[type="range"] {
+      font: inherit;
+    }
+
+    .btn,
+    .ghost-link {
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 11px 14px;
+      cursor: pointer;
+      background: #fff;
+      color: var(--text);
+      transition: 0.18s ease;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn:hover,
+    .ghost-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .btn.soft {
+      background: #eef6ff;
+      color: var(--accent-2);
+      border-color: #cde1f8;
+    }
+
+    .btn.danger {
+      background: #fff5f2;
+      color: var(--danger);
+      border-color: #efd6cf;
+    }
+
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .helper {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .queue-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 620px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .queue-item {
+      display: grid;
+      grid-template-columns: 74px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      background: #fff;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .queue-item:hover,
+    .queue-item.active {
+      border-color: #cab08a;
+      box-shadow: 0 8px 22px rgba(180,138,82,0.12);
+      transform: translateY(-1px);
+    }
+
+    .queue-item img {
+      width: 74px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #f1ece4;
+    }
+
+    .queue-main {
+      min-width: 0;
+    }
+
+    .queue-main strong {
+      display: block;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .queue-main span,
+    .queue-meta {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 84px;
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: 1px solid var(--line);
+      background: #fcfbf8;
+      color: var(--muted);
+    }
+
+    .status-pill.ready { color: #7b684e; background: #fbf4ea; border-color: #eadbc7; }
+    .status-pill.reviewed { color: var(--success); background: #f2faf5; border-color: #d3eadb; }
+    .status-pill.pending { color: var(--muted); }
+
+    .viewer-wrap {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 16px;
+      min-height: 820px;
+    }
+
+    .viewer-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .viewer-toolbar .left,
+    .viewer-toolbar .right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: #f4efe8;
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      gap: 4px;
+    }
+
+    .segmented button {
+      border: none;
+      background: transparent;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .segmented button.active {
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .canvas-stage {
+      display: grid;
+      gap: 14px;
+    }
+
+    .canvas-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .canvas-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fff, #f8f4ed);
+    }
+
+    .canvas-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(250,246,239,0.8);
+    }
+
+    .canvas-head strong {
+      font-size: 13px;
+    }
+
+    .canvas-head span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .canvas-box {
+      position: relative;
+      min-height: 330px;
+      background: linear-gradient(180deg, #efe7db, #e8dfd3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    canvas {
+      max-width: 100%;
+      max-height: 72vh;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      background: #ddd4c8;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
+    }
+
+    .overlay-grid {
+      position: absolute;
+      inset: 12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      border-radius: 12px;
+      overflow: hidden;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.32) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.32) 1px, transparent 1px),
+        linear-gradient(to right, rgba(255,255,255,0.55) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.55) 1px, transparent 1px);
+      background-size: 8.33% 100%, 100% 8.33%, 33.33% 100%, 100% 33.33%;
+      mix-blend-mode: screen;
+    }
+
+    .overlay-grid.show { opacity: 1; }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.6;
+      padding: 46px 24px;
+    }
+
+    .controls-scroll {
+      max-height: calc(100vh - 180px);
+      overflow: auto;
+      padding-right: 6px;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .preset-btn {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      text-align: left;
+      padding: 12px;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .preset-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
+    .preset-btn strong { display: block; font-size: 13px; margin-bottom: 4px; }
+    .preset-btn span { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    .control-group {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .control-group:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .control-group h4 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    .control {
+      margin-bottom: 14px;
+    }
+
+    .control:last-child { margin-bottom: 0; }
+
+    .control .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 7px;
+    }
+
+    .control label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .control .value {
+      font-size: 11px;
+      color: var(--muted);
+      min-width: 42px;
+      text-align: right;
+    }
+
+    .control input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .note-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #eadbc7;
+      background: #fbf5ea;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #705b3f;
+    }
+
+    .analysis-box {
+      border: 1px solid var(--line);
+      background: #fffcf8;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .analysis-box strong {
+      color: var(--text);
+    }
+
+    .select-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 11px 12px;
+      font-size: 13px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+
+    .markup-layer {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 4;
+    }
+
+    .markup-layer.active {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    .markup-zone {
+      position: absolute;
+      border: 2px solid rgba(24, 136, 227, 0.95);
+      background: rgba(24, 136, 227, 0.16);
+      border-radius: 10px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
+      overflow: hidden;
+    }
+
+    .markup-zone.preview {
+      border-style: dashed;
+      background: rgba(24, 136, 227, 0.10);
+    }
+
+    .markup-zone-label {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      max-width: calc(100% - 16px);
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(7, 31, 70, 0.82);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ai-box {
+      margin-top: 0;
+      background: linear-gradient(180deg, #f9fdff, #f2f9ff);
+      border-color: rgba(48, 122, 219, 0.18);
+    }
+
+    .zone-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .zone-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .zone-item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .zone-item input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 11px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 104px;
+      line-height: 1.5;
+    }
+
+    textarea[readonly] {
+      background: #fbfdff;
+    }
+
+    .declutter-status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .ai-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .micro-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1280px) {
+      .layout {
+        grid-template-columns: 300px minmax(0, 1fr);
+      }
+      .controls-panel {
+        grid-column: 1 / -1;
+      }
+      .controls-scroll { max-height: none; }
+    }
+
+    @media (max-width: 920px) {
+      .app { padding: 18px; }
+      .topbar,
+      .viewer-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .canvas-grid,
+      .preset-grid,
+      .select-row,
+      .ai-actions {
+        grid-template-columns: 1fr;
+      }
+      .canvas-box { min-height: 260px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="page-shell">
-    <header class="hero-card">
-      <div class="hero-copy">
-        <div class="brand-pill">
-          <span class="brand-dot"></span>
-          Blue Lily Photo Review
+  <div class="app">
+    <div class="topbar">
+      <div class="title-wrap">
+        <div class="brand-row">
+          <img src="assets/logo-512.png" alt="Blue Lily Properties logo" class="brand-logo" />
+          <div>
+            <div class="brand-kicker">Blue Lily Properties</div>
+            <h1>Property Photo Review Studio</h1>
+          </div>
         </div>
-        <h1>Upload. Review side by side. Approve, re-edit, or download.</h1>
         <p>
-          A softer light-blue interface built for real estate photo workflows. The original photo sits on the left,
-          the edited version appears on the right, and the next action is always clear.
+          A stronger semi-automatic workflow for real-estate photos with a clean Blue Lily feel. It suggests safe starting corrections,
+          lets you manually refine straighten and perspective, shows the original next to the edit, and exports web-ready files.
+          It does not do fake object removal or structural changes.
         </p>
       </div>
-      <div class="hero-actions">
-        <input id="fileInput" type="file" accept="image/*" hidden />
-        <button id="uploadBtn" class="btn btn-primary">Upload Photo</button>
-        <button id="editBtn" class="btn btn-secondary" disabled>Edit Photo</button>
+      <div class="badge-row">
+        <div class="badge">Review-first workflow</div>
+        <div class="badge">Runs in browser</div>
+        <div class="badge">Batch apply + ZIP export</div>
       </div>
-    </header>
+    </div>
 
-    <main class="content-grid">
-      <aside class="panel controls-panel">
+    <div class="layout">
+      <section class="panel">
         <div class="panel-head">
-          <h2>Editing controls</h2>
+          <h2>Queue</h2>
+          <p>Upload multiple photos, then review them one by one in a Blue Lily style workflow.</p>
         </div>
-
-        <section>
-          <label class="section-label">Quick tools</label>
-          <div class="tool-grid">
-            <button class="tool-card active" data-tool="brighten">
-              <div class="tool-title">Brighten / Balance</div>
-              <div class="tool-text">Lift shadows and balance room light.</div>
-            </button>
-            <button class="tool-card active" data-tool="straighten">
-              <div class="tool-title">Straighten Lines</div>
-              <div class="tool-text">Correct walls, verticals, and perspective.</div>
-            </button>
-            <button class="tool-card" data-tool="declutter">
-              <div class="tool-title">Declutter</div>
-              <div class="tool-text">Remove small distractions and clean the scene.</div>
-            </button>
-            <button class="tool-card" data-tool="enhance">
-              <div class="tool-title">Property24 Finish</div>
-              <div class="tool-text">Clean, polished listing-photo presentation.</div>
-            </button>
+        <div class="panel-body">
+          <div id="dropzone" class="dropzone">
+            <div class="icon">⌂</div>
+            <strong>Drop photos here or click to select</strong>
+            <span>JPEG, PNG or WebP • processing stays in the browser • best for Property24-style review • opens from ChatGPT or as a standalone file</span>
           </div>
-        </section>
+          <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple />
 
-        <section>
-          <label class="section-label" for="customPrompt">Custom edit request</label>
-          <textarea id="customPrompt" rows="7">Clean and brighten the photo, straighten lines, keep structure unchanged, and keep the result natural for a professional real estate listing.</textarea>
-        </section>
-
-        <section>
-          <label class="section-label" for="jobLabel">Job label</label>
-          <input id="jobLabel" type="text" placeholder="Example: Bedfordview ground floor unit" />
-        </section>
-
-        <div class="panel-actions">
-          <button id="runEditBtn" class="btn btn-primary" disabled>Run Edit</button>
-          <button id="resetBtn" class="btn btn-secondary" disabled>Reset</button>
-        </div>
-      </aside>
-
-      <section class="panel review-panel">
-        <div class="panel-head review-head">
-          <div>
-            <h2>Side-by-side review</h2>
-            <p>Desktop shows both panels side by side. Mobile stacks them for easy review.</p>
+          <div class="mini-actions">
+            <button class="btn soft" id="applySuggestedToAllBtn" disabled>Apply suggested settings to all</button>
+            <button class="btn" id="pasteSettingsBtn" disabled>Paste copied settings</button>
+            <button class="btn danger" id="clearQueueBtn" disabled>Clear queue</button>
           </div>
-          <div id="selectedBadges" class="badge-row"></div>
+
+          <div class="helper" id="queueSummary">No photos loaded yet.</div>
+          <div class="queue-list" id="queueList"></div>
+        </div>
+      </section>
+
+      <section class="panel viewer-wrap">
+        <div class="panel-head">
+          <h2>Review</h2>
+          <p>Use the grid and side-by-side view to keep walls straight, edits realistic, and output brand-consistent.</p>
         </div>
 
-        <div class="photo-grid">
-          <article class="photo-card">
-            <div class="photo-meta">
-              <div>
-                <div class="photo-label">Original</div>
-                <div class="photo-subtitle">Uploaded photo</div>
+        <div class="panel-body viewer-toolbar">
+          <div class="left">
+            <div class="segmented" id="viewModeGroup">
+              <button data-view="split" class="active">Side by side</button>
+              <button data-view="edited">Edited only</button>
+              <button data-view="original">Original only</button>
+            </div>
+            <button class="btn" id="toggleGridBtn" disabled>Show alignment grid</button>
+          </div>
+          <div class="right">
+            <button class="btn" id="copySettingsBtn" disabled>Copy settings</button>
+            <button class="btn" id="resetPhotoBtn" disabled>Reset photo</button>
+            <button class="btn primary" id="markReviewedBtn" disabled>Mark reviewed</button>
+          </div>
+        </div>
+
+        <div class="panel-body canvas-stage">
+          <div id="viewerEmpty" class="empty-state">
+            Upload photos to begin. The editor will suggest a balanced starting point for each image,
+            but you still review and adjust every final photo.
+          </div>
+
+          <div id="viewerContent" style="display:none;">
+            <div class="canvas-grid" id="canvasGrid">
+              <div class="canvas-card" id="originalCard">
+                <div class="canvas-head">
+                  <strong>Original</strong>
+                  <span id="originalMeta">—</span>
+                </div>
+                <div class="canvas-box">
+                  <canvas id="originalCanvas"></canvas>
+                  <div class="overlay-grid" id="originalGrid"></div>
+                </div>
+              </div>
+
+              <div class="canvas-card" id="editedCard">
+                <div class="canvas-head">
+                  <strong>Edited</strong>
+                  <span id="editedMeta">—</span>
+                </div>
+                <div class="canvas-box" id="editedCanvasBox">
+                  <canvas id="editedCanvas"></canvas>
+                  <div class="markup-layer" id="editedMarkupLayer"></div>
+                  <div class="overlay-grid" id="editedGrid"></div>
+                </div>
               </div>
             </div>
-            <div class="photo-frame">
-              <img id="originalImage" alt="Original preview" hidden />
-              <div id="originalEmpty" class="empty-state">
-                <div class="empty-icon"></div>
-                <p>Upload a photo to preview the original image here.</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="photo-card">
-            <div class="photo-meta">
-              <div>
-                <div class="photo-label">Edited</div>
-                <div id="editedSubtitle" class="photo-subtitle">Edited output</div>
-              </div>
-              <span id="statusBadge" class="status-badge hidden"></span>
-            </div>
-            <div class="photo-frame">
-              <img id="editedImage" alt="Edited preview" hidden />
-              <div id="editedEmpty" class="empty-state">
-                <div class="empty-icon"></div>
-                <p>Run the edit to see the processed result here.</p>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="next-action-box">
-          <div>
-            <div class="section-title">Next action</div>
-            <p>Approve the edited version, re-run the edit with updated settings, or download the current result.</p>
-          </div>
-          <div class="action-buttons">
-            <button id="approveBtn" class="btn btn-success" disabled>Approve</button>
-            <button id="reeditBtn" class="btn btn-secondary" disabled>Re-Edit</button>
-            <button id="downloadBtn" class="btn btn-secondary" disabled>Download</button>
-          </div>
-        </div>
-
-        <div class="info-grid">
-          <div class="info-card">
-            <div class="info-title">Upload photo</div>
-            <p>The original image appears immediately so the user can confirm the correct file loaded.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-title">Edited on right</div>
-            <p>The processed version displays separately for a clean before-and-after review flow.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-title">Approve or re-edit</div>
-            <p>The user can accept the result, refine it, or download the final image.</p>
+            <div class="helper" id="currentFileLabel"></div>
           </div>
         </div>
       </section>
-    </main>
+
+      <section class="panel controls-panel">
+        <div class="panel-head">
+          <h3>Controls</h3>
+          <p>Semi-automatic edits only. Good for clean enhancement, straightening and export with a premium Blue Lily presentation.</p>
+        </div>
+        <div class="panel-body controls-scroll">
+          <div class="analysis-box" id="analysisBox">
+            <strong>Waiting for photo.</strong><br>
+            Suggested adjustments will appear here after you load an image.
+          </div>
+
+          <div class="select-row auto-edit-row">
+            <select id="autoStrengthSelect">
+              <option value="90">Natural auto edit</option>
+              <option value="120" selected>Balanced auto edit</option>
+              <option value="145">Stronger auto edit</option>
+              <option value="170">Bright portal auto edit</option>
+            </select>
+            <button class="btn primary" id="runAutoEditBtn" disabled>Run auto edit</button>
+          </div>
+
+          <div class="preset-grid">
+            <button class="preset-btn" data-preset="interior">
+              <strong>Interior Balanced</strong>
+              <span>Lifts shadows, controls highlights, keeps colour neutral.</span>
+            </button>
+            <button class="preset-btn" data-preset="exterior">
+              <strong>Exterior Clean</strong>
+              <span>Protects sky detail and keeps greens and walls believable.</span>
+            </button>
+            <button class="preset-btn" data-preset="rental">
+              <strong>Bright Rental</strong>
+              <span>A touch brighter for portals, without washing out the room.</span>
+            </button>
+            <button class="preset-btn" data-preset="luxury">
+              <strong>Soft Luxury</strong>
+              <span>Softer contrast and warmth for premium interiors.</span>
+            </button>
+          </div>
+
+          <div class="quick-actions">
+            <button class="btn soft" id="analyzeBtn" disabled>Rebuild auto settings</button>
+            <button class="btn" id="applyCurrentToAllBtn" disabled>Apply current settings to all</button>
+          </div>
+
+          <div class="control-group">
+            <h4>Light and colour</h4>
+            <div id="lightControls"></div>
+          </div>
+
+          <div class="control-group">
+            <h4>Detail and geometry</h4>
+            <div id="detailControls"></div>
+          </div>
+
+          <div class="control-group">
+            <h4>Declutter and special ChatGPT request</h4>
+            <div class="analysis-box ai-box">
+              <strong>Mark clutter or specific change areas.</strong><br>
+              Draw boxes on the edited preview for distractions or change zones, type extra instructions, and build a strict ChatGPT-ready prompt.
+            </div>
+            <div class="select-row">
+              <select id="promptPresetSelect">
+                <option value="property24" selected>Property24 strict edit</option>
+                <option value="luxury">Luxury clean edit</option>
+                <option value="rental">Rental bright clean edit</option>
+                <option value="declutter">Declutter only</option>
+                <option value="special">Special custom prompt</option>
+              </select>
+              <button class="btn" id="toggleDeclutterBtn" disabled>Start declutter marking</button>
+            </div>
+            <div class="quick-actions">
+              <button class="btn soft" id="clearZonesBtn" disabled>Clear marked zones</button>
+              <button class="btn" id="buildPromptBtn" disabled>Build ChatGPT prompt</button>
+            </div>
+            <div class="declutter-status" id="declutterStatus">No declutter zones marked.</div>
+            <div class="zone-list" id="zoneList"></div>
+            <div class="control">
+              <div class="label-row">
+                <label for="customChangeInput">Specify extra changes</label>
+                <div class="value">Optional</div>
+              </div>
+              <textarea id="customChangeInput" placeholder="Example: Remove the mop bucket by the doorway, tidy the kitchen counter, keep all cupboards, paint colours, fittings and structure exactly the same."></textarea>
+            </div>
+            <div class="ai-actions">
+              <button class="btn primary" id="copyPromptBtn" disabled>Copy prompt</button>
+              <button class="btn primary" id="openChatgptBtn" disabled>Copy + open ChatGPT</button>
+              <button class="btn" id="downloadPromptBtn" disabled>Download prompt TXT</button>
+            </div>
+            <div class="control">
+              <div class="label-row">
+                <label for="promptOutput">ChatGPT prompt</label>
+                <div class="value">Generated</div>
+              </div>
+              <textarea id="promptOutput" readonly placeholder="Build a prompt after marking zones or typing instructions."></textarea>
+            </div>
+            <div class="micro-note">
+              This generates a ChatGPT-ready request. A standalone HTML file cannot automatically inject the image and prompt into this same chat, so the app copies the prompt and can open ChatGPT in a new tab.
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h4>Export</h4>
+            <div class="select-row">
+              <select id="exportModeSelect">
+                <option value="web">Web 2048 px</option>
+                <option value="portal">Portal 1600 px</option>
+                <option value="both" selected>Both sizes</option>
+              </select>
+              <select id="jpegQualitySelect">
+                <option value="0.86">JPEG quality 86</option>
+                <option value="0.9" selected>JPEG quality 90</option>
+                <option value="0.93">JPEG quality 93</option>
+              </select>
+            </div>
+            <div class="export-actions">
+              <button class="btn primary" id="exportCurrentBtn" disabled>Export current photo</button>
+              <button class="btn primary" id="exportReviewedBtn" disabled>Export reviewed as ZIP</button>
+              <button class="btn" id="exportAllBtn" disabled>Export all as ZIP</button>
+            </div>
+            <div class="footer-note">
+              Export keeps the original framing as much as possible. Minor edge crop can happen when straighten or perspective is used.
+            </div>
+          </div>
+
+          <div class="note-box">
+            Best for: brightening, white balance cleanup, mild perspective correction, subtle sharpening and consistent portal exports.<br>
+            Not for: removing fixtures, changing structure, replacing skies, heavy AI staging, or automatic clutter removal.
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const CONTROLS = [
+      { key: 'exposure', label: 'Exposure', min: -35, max: 35, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'contrast', label: 'Contrast', min: -25, max: 25, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'highlights', label: 'Highlights', min: -45, max: 45, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'shadows', label: 'Shadows', min: -45, max: 45, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'saturation', label: 'Saturation', min: -20, max: 25, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'warmth', label: 'Warmth', min: -20, max: 20, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'vibrance', label: 'Vibrance', min: -15, max: 25, step: 1, def: 0, target: 'lightControls', suffix: v => signed(v) },
+      { key: 'clarity', label: 'Clarity', min: 0, max: 20, step: 1, def: 6, target: 'detailControls', suffix: v => v },
+      { key: 'sharpen', label: 'Sharpen', min: 0, max: 20, step: 1, def: 6, target: 'detailControls', suffix: v => v },
+      { key: 'straighten', label: 'Straighten', min: -6, max: 6, step: 0.1, def: 0, target: 'detailControls', suffix: v => `${Number(v).toFixed(1)}°` },
+      { key: 'perspectiveX', label: 'Perspective left/right', min: -18, max: 18, step: 0.5, def: 0, target: 'detailControls', suffix: v => signedFixed(v) },
+      { key: 'perspectiveY', label: 'Perspective top/bottom', min: -18, max: 18, step: 0.5, def: 0, target: 'detailControls', suffix: v => signedFixed(v) },
+    ];
+
+    const PRESETS = {
+      interior: { exposure: 10, contrast: 2, highlights: -18, shadows: 18, saturation: 3, warmth: -2, vibrance: 10, clarity: 7, sharpen: 7, straighten: 0, perspectiveX: 0, perspectiveY: 0 },
+      exterior: { exposure: 4, contrast: 5, highlights: -14, shadows: 8, saturation: 3, warmth: -1, vibrance: 6, clarity: 8, sharpen: 7, straighten: 0, perspectiveX: 0, perspectiveY: 0 },
+      rental: { exposure: 12, contrast: 1, highlights: -12, shadows: 20, saturation: 4, warmth: 0, vibrance: 10, clarity: 6, sharpen: 6, straighten: 0, perspectiveX: 0, perspectiveY: 0 },
+      luxury: { exposure: 6, contrast: -3, highlights: -10, shadows: 10, saturation: -1, warmth: 3, vibrance: 5, clarity: 5, sharpen: 5, straighten: 0, perspectiveX: 0, perspectiveY: 0 },
+    };
+
+    const state = {
+      photos: [],
+      currentId: null,
+      copiedSettings: null,
+      viewMode: 'split',
+      showGrid: false,
+      renderToken: 0,
+      declutterMode: false,
+      drawStart: null,
+      draftZone: null,
+    };
+
+    const queueList = document.getElementById('queueList');
+    const queueSummary = document.getElementById('queueSummary');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const originalCanvas = document.getElementById('originalCanvas');
+    const editedCanvas = document.getElementById('editedCanvas');
+    const originalMeta = document.getElementById('originalMeta');
+    const editedMeta = document.getElementById('editedMeta');
+    const currentFileLabel = document.getElementById('currentFileLabel');
+    const analysisBox = document.getElementById('analysisBox');
+    const viewerEmpty = document.getElementById('viewerEmpty');
+    const viewerContent = document.getElementById('viewerContent');
+    const originalCard = document.getElementById('originalCard');
+    const editedCard = document.getElementById('editedCard');
+    const originalGrid = document.getElementById('originalGrid');
+    const editedGrid = document.getElementById('editedGrid');
+    const editedCanvasBox = document.getElementById('editedCanvasBox');
+    const editedMarkupLayer = document.getElementById('editedMarkupLayer');
+
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const promptPresetSelect = document.getElementById('promptPresetSelect');
+    const toggleDeclutterBtn = document.getElementById('toggleDeclutterBtn');
+    const clearZonesBtn = document.getElementById('clearZonesBtn');
+    const buildPromptBtn = document.getElementById('buildPromptBtn');
+    const zoneList = document.getElementById('zoneList');
+    const declutterStatus = document.getElementById('declutterStatus');
+    const customChangeInput = document.getElementById('customChangeInput');
+    const promptOutput = document.getElementById('promptOutput');
+    const copyPromptBtn = document.getElementById('copyPromptBtn');
+    const openChatgptBtn = document.getElementById('openChatgptBtn');
+    const downloadPromptBtn = document.getElementById('downloadPromptBtn');
+    const runAutoEditBtn = document.getElementById('runAutoEditBtn');
+    const applyCurrentToAllBtn = document.getElementById('applyCurrentToAllBtn');
+    const applySuggestedToAllBtn = document.getElementById('applySuggestedToAllBtn');
+    const copySettingsBtn = document.getElementById('copySettingsBtn');
+    const pasteSettingsBtn = document.getElementById('pasteSettingsBtn');
+    const resetPhotoBtn = document.getElementById('resetPhotoBtn');
+    const markReviewedBtn = document.getElementById('markReviewedBtn');
+    const toggleGridBtn = document.getElementById('toggleGridBtn');
+    const clearQueueBtn = document.getElementById('clearQueueBtn');
+    const exportCurrentBtn = document.getElementById('exportCurrentBtn');
+    const exportReviewedBtn = document.getElementById('exportReviewedBtn');
+    const exportAllBtn = document.getElementById('exportAllBtn');
+
+    buildControls();
+    bindEvents();
+    refreshUI();
+
+    function bindEvents() {
+      dropzone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (e) => addFiles([...e.target.files]));
+
+      ['dragenter','dragover'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dropzone.classList.add('dragover');
+        });
+      });
+      ['dragleave','drop'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('dragover');
+        });
+      });
+      dropzone.addEventListener('drop', (e) => addFiles([...e.dataTransfer.files]));
+
+      document.getElementById('viewModeGroup').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-view]');
+        if (!btn) return;
+        state.viewMode = btn.dataset.view;
+        [...document.querySelectorAll('#viewModeGroup button')].forEach(b => b.classList.toggle('active', b === btn));
+        updateViewMode();
+      });
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const photo = getCurrentPhoto();
+          if (!photo) return;
+          const preset = PRESETS[btn.dataset.preset];
+          photo.settings = mergeSettings(preset);
+          photo.autoEdited = true;
+          photo.status = 'ready';
+          updateControlValues(photo.settings);
+          refreshQueue();
+          renderCurrentPhoto();
+        });
+      });
+
+      analyzeBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        applySuggestedSettings(photo, true, getAutoStrength());
+      });
+
+      applyCurrentToAllBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        const source = { ...photo.settings };
+        state.photos.forEach(p => {
+          p.settings = mergeSettings(source);
+          if (p.id !== photo.id) p.status = 'ready';
+        });
+        refreshQueue();
+      });
+
+      runAutoEditBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        applySuggestedSettings(photo, true, getAutoStrength());
+      });
+
+      applySuggestedToAllBtn.addEventListener('click', () => {
+        const strength = getAutoStrength();
+        state.photos.forEach(photo => applySuggestedSettings(photo, false, strength));
+        if (state.currentId !== null) {
+          const current = getCurrentPhoto();
+          updateControlValues(current.settings);
+          renderCurrentPhoto();
+        }
+        refreshQueue();
+      });
+
+      copySettingsBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        state.copiedSettings = { ...photo.settings };
+        pasteSettingsBtn.disabled = false;
+      });
+
+      pasteSettingsBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo || !state.copiedSettings) return;
+        photo.settings = mergeSettings(state.copiedSettings);
+        photo.autoEdited = true;
+        photo.status = 'ready';
+        updateControlValues(photo.settings);
+        refreshQueue();
+        renderCurrentPhoto();
+      });
+
+      resetPhotoBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.settings = mergeSettings(photo.autoEdited ? photo.suggestedSettings : {});
+        photo.status = 'ready';
+        updateControlValues(photo.settings);
+        refreshQueue();
+        renderCurrentPhoto();
+      });
+
+      markReviewedBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.status = 'reviewed';
+        refreshQueue();
+        refreshUI();
+      });
+
+      toggleGridBtn.addEventListener('click', () => {
+        state.showGrid = !state.showGrid;
+        toggleGridBtn.textContent = state.showGrid ? 'Hide alignment grid' : 'Show alignment grid';
+        originalGrid.classList.toggle('show', state.showGrid);
+        editedGrid.classList.toggle('show', state.showGrid);
+      });
+
+      clearQueueBtn.addEventListener('click', clearQueue);
+      exportCurrentBtn.addEventListener('click', async () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        await exportPhotos([photo], false);
+      });
+      exportReviewedBtn.addEventListener('click', async () => {
+        const reviewed = state.photos.filter(p => p.status === 'reviewed');
+        if (!reviewed.length) return;
+        await exportPhotos(reviewed, true);
+      });
+      exportAllBtn.addEventListener('click', async () => {
+        if (!state.photos.length) return;
+        await exportPhotos(state.photos, true);
+      });
+
+      promptPresetSelect.addEventListener('change', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.promptPreset = promptPresetSelect.value;
+        refreshPromptPanel();
+      });
+
+      customChangeInput.addEventListener('input', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.customPrompt = customChangeInput.value;
+        photo.builtPrompt = '';
+        refreshPromptPanel();
+      });
+
+      toggleDeclutterBtn.addEventListener('click', () => {
+        if (!getCurrentPhoto()) return;
+        state.declutterMode = !state.declutterMode;
+        state.drawStart = null;
+        state.draftZone = null;
+        refreshPromptPanel();
+        renderAiZones();
+      });
+
+      clearZonesBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.aiZones = [];
+        photo.builtPrompt = '';
+        refreshPromptPanel();
+        renderAiZones();
+      });
+
+      buildPromptBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        photo.builtPrompt = buildChatGptPrompt(photo);
+        promptOutput.value = photo.builtPrompt;
+        refreshPromptPanel();
+      });
+
+      copyPromptBtn.addEventListener('click', async () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        if (!photo.builtPrompt) {
+          photo.builtPrompt = buildChatGptPrompt(photo);
+          promptOutput.value = photo.builtPrompt;
+        }
+        await copyText(photo.builtPrompt);
+      });
+
+      openChatgptBtn.addEventListener('click', async () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        if (!photo.builtPrompt) {
+          photo.builtPrompt = buildChatGptPrompt(photo);
+          promptOutput.value = photo.builtPrompt;
+        }
+        await copyText(photo.builtPrompt);
+        window.open('https://chatgpt.com/', '_blank', 'noopener');
+      });
+
+      downloadPromptBtn.addEventListener('click', () => {
+        const photo = getCurrentPhoto();
+        if (!photo) return;
+        if (!photo.builtPrompt) {
+          photo.builtPrompt = buildChatGptPrompt(photo);
+          promptOutput.value = photo.builtPrompt;
+        }
+        const blob = new Blob([photo.builtPrompt], { type: 'text/plain;charset=utf-8' });
+        downloadBlob(blob, `${photo.name.replace(/\.[^.]+$/, '')}_chatgpt_prompt.txt`);
+      });
+
+      zoneList.addEventListener('input', (e) => {
+        const photo = getCurrentPhoto();
+        const input = e.target.closest('input[data-zone-index]');
+        if (!photo || !input) return;
+        const idx = Number(input.dataset.zoneIndex);
+        if (!photo.aiZones[idx]) return;
+        photo.aiZones[idx].label = input.value;
+        photo.builtPrompt = '';
+        renderAiZones();
+      });
+
+      zoneList.addEventListener('click', (e) => {
+        const photo = getCurrentPhoto();
+        const btn = e.target.closest('button[data-remove-zone]');
+        if (!photo || !btn) return;
+        const idx = Number(btn.dataset.removeZone);
+        photo.aiZones.splice(idx, 1);
+        photo.builtPrompt = '';
+        refreshPromptPanel();
+        renderAiZones();
+      });
+
+      editedMarkupLayer.addEventListener('pointerdown', startZoneDraw);
+      editedMarkupLayer.addEventListener('pointermove', moveZoneDraw);
+      editedMarkupLayer.addEventListener('pointerup', endZoneDraw);
+      editedMarkupLayer.addEventListener('pointerleave', endZoneDraw);
+      window.addEventListener('resize', () => {
+        fitMarkupLayerToCanvas();
+        renderAiZones();
+      });
+    }
+
+    function buildControls() {
+      CONTROLS.forEach(ctrl => {
+        const wrap = document.createElement('div');
+        wrap.className = 'control';
+        wrap.innerHTML = `
+          <div class="label-row">
+            <label for="ctrl-${ctrl.key}">${ctrl.label}</label>
+            <div class="value" id="val-${ctrl.key}">${ctrl.suffix(ctrl.def)}</div>
+          </div>
+          <input id="ctrl-${ctrl.key}" type="range" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" value="${ctrl.def}" />
+        `;
+        document.getElementById(ctrl.target).appendChild(wrap);
+
+        wrap.querySelector('input').addEventListener('input', (e) => {
+          const photo = getCurrentPhoto();
+          if (!photo) return;
+          const value = Number(e.target.value);
+          photo.settings[ctrl.key] = value;
+          photo.autoEdited = true;
+          photo.status = 'ready';
+          document.getElementById(`val-${ctrl.key}`).textContent = ctrl.suffix(value);
+          refreshQueue();
+          renderCurrentPhoto();
+        });
+      });
+    }
+
+    function addFiles(fileList) {
+      const supported = fileList.filter(file => /image\/(jpeg|png|webp)/i.test(file.type));
+      if (!supported.length) return;
+
+      supported.forEach(file => {
+        const duplicate = state.photos.some(p => p.name === file.name && p.size === file.size && p.lastModified === file.lastModified);
+        if (duplicate) return;
+
+        const photo = {
+          id: crypto.randomUUID(),
+          file,
+          name: file.name,
+          size: file.size,
+          lastModified: file.lastModified,
+          status: 'pending',
+          image: null,
+          thumbUrl: URL.createObjectURL(file),
+          stats: null,
+          suggestedSettings: mergeSettings({}),
+          settings: mergeSettings({}),
+          autoEdited: false,
+          lastAutoStrength: null,
+          originalPreviewCanvas: null,
+          editedPreviewCanvas: null,
+          aiZones: [],
+          customPrompt: '',
+          promptPreset: 'property24',
+          builtPrompt: '',
+        };
+        state.photos.push(photo);
+      });
+
+      fileInput.value = '';
+      hydratePhotos(supported).catch(console.error);
+      refreshQueue();
+      refreshUI();
+    }
+
+    async function hydratePhotos() {
+      for (const photo of state.photos) {
+        if (photo.image) continue;
+        photo.image = await loadImage(photo.file);
+        photo.stats = analyzeImage(photo.image);
+        photo.suggestedSettings = buildAutoSettings(photo.stats, getAutoStrength());
+        photo.settings = mergeSettings({});
+        photo.autoEdited = false;
+        photo.status = 'ready';
+      }
+
+      if (!state.currentId && state.photos.length) {
+        state.currentId = state.photos[0].id;
+      }
+
+      const current = getCurrentPhoto();
+      if (current) {
+        updateControlValues(current.settings);
+        renderCurrentPhoto();
+      }
+      refreshQueue();
+      refreshUI();
+    }
+
+    function analyzeImage(img) {
+      const maxSide = 320;
+      const ratio = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const w = Math.max(1, Math.round(img.width * ratio));
+      const h = Math.max(1, Math.round(img.height * ratio));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, w, h);
+      const data = ctx.getImageData(0, 0, w, h).data;
+
+      let lumSum = 0;
+      let rSum = 0;
+      let gSum = 0;
+      let bSum = 0;
+      let satSum = 0;
+      let brightPixels = 0;
+      let darkPixels = 0;
+      let blueSkyish = 0;
+      let greenish = 0;
+      const lumValues = [];
+      const edgeMagnitudes = [];
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        lumSum += lum;
+        rSum += r;
+        gSum += g;
+        bSum += b;
+        satSum += max === 0 ? 0 : ((max - min) / max);
+        lumValues.push(lum);
+        if (lum > 205) brightPixels++;
+        if (lum < 65) darkPixels++;
+        if (b > r + 18 && b > g + 8 && lum > 110) blueSkyish++;
+        if (g > r + 10 && g > b - 5 && lum > 70) greenish++;
+      }
+
+      const total = data.length / 4;
+      lumValues.sort((a, b) => a - b);
+      const p10 = lumValues[Math.floor(total * 0.10)];
+      const p50 = lumValues[Math.floor(total * 0.50)];
+      const p90 = lumValues[Math.floor(total * 0.90)];
+      const avgLum = lumSum / total;
+      const avgR = rSum / total;
+      const avgG = gSum / total;
+      const avgB = bSum / total;
+      const saturation = satSum / total;
+      const brightRatio = brightPixels / total;
+      const darkRatio = darkPixels / total;
+      const outdoorLikelihood = clamp01((blueSkyish / total) * 3 + (greenish / total) * 2 + (p90 > 210 ? 0.15 : 0));
+      const whiteBalanceBias = avgR - avgB;
+
+      // Fast edge / detail estimate
+      for (let y = 1; y < h - 1; y += 2) {
+        for (let x = 1; x < w - 1; x += 2) {
+          const idx = (y * w + x) * 4;
+          const idxR = (y * w + (x + 1)) * 4;
+          const idxB = ((y + 1) * w + x) * 4;
+          const lumC = 0.2126 * data[idx] + 0.7152 * data[idx + 1] + 0.0722 * data[idx + 2];
+          const lumR = 0.2126 * data[idxR] + 0.7152 * data[idxR + 1] + 0.0722 * data[idxR + 2];
+          const lumB = 0.2126 * data[idxB] + 0.7152 * data[idxB + 1] + 0.0722 * data[idxB + 2];
+          edgeMagnitudes.push(Math.abs(lumC - lumR) + Math.abs(lumC - lumB));
+        }
+      }
+      const detailScore = edgeMagnitudes.length
+        ? edgeMagnitudes.reduce((sum, v) => sum + v, 0) / edgeMagnitudes.length
+        : 0;
+
+      return {
+        width: img.width,
+        height: img.height,
+        avgLum,
+        p10,
+        p50,
+        p90,
+        brightRatio,
+        darkRatio,
+        outdoorLikelihood,
+        whiteBalanceBias,
+        avgR,
+        avgG,
+        avgB,
+        saturation,
+        detailScore,
+      };
+    }
+
+    function suggestSettings(stats) {
+      const exposure = clamp(Math.round((132 - stats.avgLum) * 0.16), -10, 20);
+      const shadows = clamp(Math.round((0.22 - stats.darkRatio) * -120), -10, 26);
+      const highlights = clamp(Math.round((stats.brightRatio - 0.16) * -90), -26, 12);
+      const contrast = clamp(Math.round((118 - (stats.p90 - stats.p10)) * 0.08), -10, 14);
+      const warmth = clamp(Math.round((stats.whiteBalanceBias * -0.07)), -12, 12);
+      const vibrance = clamp(Math.round((0.22 - stats.saturation) * 40), 0, 16);
+      const saturation = clamp(stats.outdoorLikelihood > 0.45 ? 2 : 4, -6, 10);
+      const clarity = clamp(Math.round(8 - stats.detailScore * 0.04), 4, 11);
+      const sharpen = clamp(Math.round(7 - stats.detailScore * 0.02), 4, 10);
+
+      return mergeSettings({
+        exposure,
+        contrast,
+        highlights,
+        shadows,
+        saturation,
+        warmth,
+        vibrance,
+        clarity,
+        sharpen,
+        straighten: 0,
+        perspectiveX: 0,
+        perspectiveY: 0,
+      });
+    }
+
+    function getAutoStrength() {
+      return Number(document.getElementById('autoStrengthSelect').value || 120);
+    }
+
+    function scaleSettings(baseSettings, strengthPercent) {
+      const factor = strengthPercent / 100;
+      const scaled = mergeSettings(baseSettings);
+      const scalableKeys = ['exposure', 'contrast', 'highlights', 'shadows', 'saturation', 'warmth', 'vibrance', 'clarity', 'sharpen'];
+      scalableKeys.forEach(key => {
+        const ctrl = CONTROLS.find(item => item.key === key);
+        if (!ctrl) return;
+        scaled[key] = clamp(Math.round(baseSettings[key] * factor), ctrl.min, ctrl.max);
+      });
+      return scaled;
+    }
+
+    function buildAutoSettings(stats, strengthPercent) {
+      return scaleSettings(suggestSettings(stats), strengthPercent);
+    }
+
+    function applySuggestedSettings(photo, rerender = true, strengthPercent = 120) {
+      if (!photo.stats) return;
+      photo.suggestedSettings = buildAutoSettings(photo.stats, strengthPercent);
+      photo.settings = mergeSettings(photo.suggestedSettings);
+      photo.autoEdited = true;
+      photo.lastAutoStrength = strengthPercent;
+      photo.status = 'ready';
+      if (getCurrentPhoto()?.id === photo.id) {
+        updateControlValues(photo.settings);
+        if (rerender) renderCurrentPhoto();
+      }
+      refreshQueue();
+    }
+
+    function mergeSettings(override) {
+      const base = {};
+      CONTROLS.forEach(ctrl => { base[ctrl.key] = ctrl.def; });
+      return { ...base, ...override };
+    }
+
+    function updateControlValues(settings) {
+      CONTROLS.forEach(ctrl => {
+        const input = document.getElementById(`ctrl-${ctrl.key}`);
+        const valueEl = document.getElementById(`val-${ctrl.key}`);
+        input.value = settings[ctrl.key];
+        valueEl.textContent = ctrl.suffix(settings[ctrl.key]);
+      });
+    }
+
+    function refreshQueue() {
+      queueList.innerHTML = '';
+      state.photos.forEach(photo => {
+        const item = document.createElement('div');
+        item.className = `queue-item ${photo.id === state.currentId ? 'active' : ''}`;
+        item.addEventListener('click', () => selectPhoto(photo.id));
+        const sizeMb = (photo.size / 1024 / 1024).toFixed(1);
+        item.innerHTML = `
+          <img src="${photo.thumbUrl}" alt="${escapeHtml(photo.name)}" />
+          <div class="queue-main">
+            <strong>${escapeHtml(photo.name)}</strong>
+            <span>${sizeMb} MB • ${photo.stats ? `${photo.stats.width} × ${photo.stats.height}` : 'Loading…'}</span>
+            <span class="queue-meta">${photo.stats ? describePhoto(photo.stats) : 'Preparing photo analysis…'}</span>
+          </div>
+          <div class="status-pill ${photo.status}">${labelStatus(photo.status)}</div>
+        `;
+        queueList.appendChild(item);
+      });
+
+      if (!state.photos.length) {
+        queueSummary.textContent = 'No photos loaded yet.';
+      } else {
+        const reviewed = state.photos.filter(p => p.status === 'reviewed').length;
+        queueSummary.textContent = `${state.photos.length} photo${state.photos.length === 1 ? '' : 's'} loaded • ${reviewed} reviewed`;
+      }
+    }
+
+    function selectPhoto(photoId) {
+      state.currentId = photoId;
+      const photo = getCurrentPhoto();
+      if (!photo) return;
+      updateControlValues(photo.settings);
+      refreshPromptPanel();
+      renderCurrentPhoto();
+      refreshQueue();
+      refreshUI();
+    }
+
+    function refreshUI() {
+      const photo = getCurrentPhoto();
+      const hasPhotos = state.photos.length > 0;
+      const hasReviewed = state.photos.some(p => p.status === 'reviewed');
+
+      applyCurrentToAllBtn.disabled = !photo;
+      applySuggestedToAllBtn.disabled = !hasPhotos;
+      runAutoEditBtn.disabled = !photo;
+      analyzeBtn.disabled = !photo;
+      copySettingsBtn.disabled = !photo;
+      pasteSettingsBtn.disabled = !photo || !state.copiedSettings;
+      resetPhotoBtn.disabled = !photo;
+      markReviewedBtn.disabled = !photo;
+      toggleGridBtn.disabled = !photo;
+      clearQueueBtn.disabled = !hasPhotos;
+      exportCurrentBtn.disabled = !photo;
+      exportReviewedBtn.disabled = !hasReviewed;
+      exportAllBtn.disabled = !hasPhotos;
+      toggleDeclutterBtn.disabled = !photo;
+      clearZonesBtn.disabled = !photo || !(photo.aiZones && photo.aiZones.length);
+      buildPromptBtn.disabled = !photo;
+
+      viewerEmpty.style.display = photo ? 'none' : 'block';
+      viewerContent.style.display = photo ? 'block' : 'none';
+
+      if (photo) {
+        currentFileLabel.textContent = photo.autoEdited
+          ? `${photo.name} • Auto edit has been applied. Review this before exporting.`
+          : `${photo.name} • Click Run auto edit, then fine-tune the sliders.`;
+        analysisBox.innerHTML = buildAnalysisHtml(photo);
+      } else {
+        currentFileLabel.textContent = '';
+        analysisBox.innerHTML = '<strong>Waiting for photo.</strong><br>Suggested adjustments will appear here after you load an image.';
+      }
+
+      refreshPromptPanel();
+      updateViewMode();
+    }
+
+    function updateViewMode() {
+      if (state.viewMode === 'split') {
+        originalCard.style.display = 'block';
+        editedCard.style.display = 'block';
+      } else if (state.viewMode === 'edited') {
+        originalCard.style.display = 'none';
+        editedCard.style.display = 'block';
+      } else {
+        originalCard.style.display = 'block';
+        editedCard.style.display = 'none';
+      }
+      requestAnimationFrame(() => {
+        fitMarkupLayerToCanvas();
+        renderAiZones();
+      });
+    }
+
+    async function renderCurrentPhoto() {
+      const photo = getCurrentPhoto();
+      if (!photo || !photo.image) return;
+      const token = ++state.renderToken;
+
+      originalMeta.textContent = `${photo.stats.width} × ${photo.stats.height}`;
+      editedMeta.textContent = photo.autoEdited ? `Edited preview • ${photo.lastAutoStrength || getAutoStrength()}% auto strength applied` : `No auto edit run yet`;
+
+      const originalPreview = renderToCanvas(photo.image, mergeSettings({}), 1400, false);
+      if (token !== state.renderToken) return;
+      drawCanvasToCanvas(originalPreview, originalCanvas);
+      fitOverlayToCanvas(originalGrid, originalCanvas);
+
+      const editedPreview = await renderToCanvas(photo.image, photo.settings, 1400, true);
+      if (token !== state.renderToken) return;
+      drawCanvasToCanvas(editedPreview, editedCanvas);
+      fitOverlayToCanvas(editedGrid, editedCanvas);
+      fitMarkupLayerToCanvas();
+      renderAiZones();
+
+      photo.originalPreviewCanvas = originalPreview;
+      photo.editedPreviewCanvas = editedPreview;
+      refreshUI();
+    }
+
+    function renderToCanvas(image, settings, maxEdge, applyGeometry) {
+      const scaled = drawScaledImage(image, maxEdge);
+      let working = scaled;
+
+      if (applyGeometry) {
+        if (Math.abs(settings.straighten) > 0.01) {
+          working = rotateAndCropCanvas(working, settings.straighten);
+        }
+        if (Math.abs(settings.perspectiveX) > 0.01) {
+          working = warpHorizontalPerspective(working, settings.perspectiveX / 100);
+        }
+        if (Math.abs(settings.perspectiveY) > 0.01) {
+          working = warpVerticalPerspective(working, settings.perspectiveY / 100);
+        }
+      }
+
+      const toned = adjustCanvasPixels(working, settings);
+      let detailed = toned;
+
+      if (settings.clarity > 0) {
+        detailed = applyUnsharpMask(detailed, settings.clarity * 0.6, 1.2);
+      }
+      if (settings.sharpen > 0) {
+        detailed = applyUnsharpMask(detailed, settings.sharpen * 0.4, 0.7);
+      }
+      return detailed;
+    }
+
+    function drawScaledImage(image, maxEdge) {
+      const ratio = Math.min(1, maxEdge / Math.max(image.width, image.height));
+      const width = Math.max(1, Math.round(image.width * ratio));
+      const height = Math.max(1, Math.round(image.height * ratio));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image, 0, 0, width, height);
+      return canvas;
+    }
+
+    function rotateAndCropCanvas(sourceCanvas, degrees) {
+      const radians = degrees * Math.PI / 180;
+      const sin = Math.abs(Math.sin(radians));
+      const cos = Math.abs(Math.cos(radians));
+      const w = sourceCanvas.width;
+      const h = sourceCanvas.height;
+      const boundW = Math.ceil(w * cos + h * sin);
+      const boundH = Math.ceil(w * sin + h * cos);
+
+      const temp = document.createElement('canvas');
+      temp.width = boundW;
+      temp.height = boundH;
+      const tctx = temp.getContext('2d');
+      tctx.translate(boundW / 2, boundH / 2);
+      tctx.rotate(radians);
+      tctx.drawImage(sourceCanvas, -w / 2, -h / 2);
+
+      const cropW = Math.max(1, Math.floor(w * (1 - sin * 0.7)));
+      const cropH = Math.max(1, Math.floor(h * (1 - sin * 0.7)));
+      const sx = Math.max(0, Math.floor((boundW - cropW) / 2));
+      const sy = Math.max(0, Math.floor((boundH - cropH) / 2));
+
+      const out = document.createElement('canvas');
+      out.width = w;
+      out.height = h;
+      const octx = out.getContext('2d');
+      octx.drawImage(temp, sx, sy, cropW, cropH, 0, 0, w, h);
+      return out;
+    }
+
+    function warpHorizontalPerspective(sourceCanvas, amount) {
+      const src = sourceCanvas;
+      const w = src.width;
+      const h = src.height;
+      const out = document.createElement('canvas');
+      out.width = w;
+      out.height = h;
+      const ctx = out.getContext('2d');
+      const strength = Math.max(-0.18, Math.min(0.18, amount));
+
+      for (let y = 0; y < h; y++) {
+        const t = y / (h - 1 || 1);
+        const localScale = 1 - strength * ((t * 2) - 1);
+        const sliceH = 1;
+        const sliceW = Math.max(1, Math.round(w * localScale));
+        const dx = (w - sliceW) / 2;
+        ctx.drawImage(src, 0, y, w, sliceH, dx, y, sliceW, sliceH);
+      }
+      return out;
+    }
+
+    function warpVerticalPerspective(sourceCanvas, amount) {
+      const src = sourceCanvas;
+      const w = src.width;
+      const h = src.height;
+      const out = document.createElement('canvas');
+      out.width = w;
+      out.height = h;
+      const ctx = out.getContext('2d');
+      const strength = Math.max(-0.18, Math.min(0.18, amount));
+
+      for (let x = 0; x < w; x++) {
+        const t = x / (w - 1 || 1);
+        const localScale = 1 - strength * ((t * 2) - 1);
+        const sliceW = 1;
+        const sliceH = Math.max(1, Math.round(h * localScale));
+        const dy = (h - sliceH) / 2;
+        ctx.drawImage(src, x, 0, sliceW, h, x, dy, sliceW, sliceH);
+      }
+      return out;
+    }
+
+    function adjustCanvasPixels(sourceCanvas, settings) {
+      const out = document.createElement('canvas');
+      out.width = sourceCanvas.width;
+      out.height = sourceCanvas.height;
+      const ctx = out.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(sourceCanvas, 0, 0);
+      const imageData = ctx.getImageData(0, 0, out.width, out.height);
+      const data = imageData.data;
+
+      const expFactor = settings.exposure / 100;
+      const contrastFactor = settings.contrast / 100;
+      const highlightFactor = settings.highlights / 100;
+      const shadowFactor = settings.shadows / 100;
+      const satFactor = settings.saturation / 100;
+      const warm = settings.warmth;
+      const vibrance = settings.vibrance / 100;
+
+      for (let i = 0; i < data.length; i += 4) {
+        let r = data[i] / 255;
+        let g = data[i + 1] / 255;
+        let b = data[i + 2] / 255;
+
+        // Exposure
+        r = clamp01(r + expFactor);
+        g = clamp01(g + expFactor);
+        b = clamp01(b + expFactor);
+
+        // Shadows / highlights on luminance
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        const shadowWeight = Math.max(0, 1 - lum) * Math.max(0, 1 - lum);
+        const highlightWeight = lum * lum;
+        r = clamp01(r + shadowWeight * shadowFactor * 0.55 - highlightWeight * highlightFactor * 0.45);
+        g = clamp01(g + shadowWeight * shadowFactor * 0.55 - highlightWeight * highlightFactor * 0.45);
+        b = clamp01(b + shadowWeight * shadowFactor * 0.55 - highlightWeight * highlightFactor * 0.45);
+
+        // Warmth
+        r = clamp01(r + warm * 0.003);
+        b = clamp01(b - warm * 0.003);
+        g = clamp01(g + warm * 0.0007);
+
+        // Contrast around midtone
+        r = clamp01(((r - 0.5) * (1 + contrastFactor)) + 0.5);
+        g = clamp01(((g - 0.5) * (1 + contrastFactor)) + 0.5);
+        b = clamp01(((b - 0.5) * (1 + contrastFactor)) + 0.5);
+
+        // Saturation + vibrance
+        const avg = (r + g + b) / 3;
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const sat = max === 0 ? 0 : (max - min) / max;
+        const vibBoost = (1 - sat) * vibrance;
+        const totalSat = satFactor + vibBoost;
+        r = clamp01(avg + (r - avg) * (1 + totalSat));
+        g = clamp01(avg + (g - avg) * (1 + totalSat));
+        b = clamp01(avg + (b - avg) * (1 + totalSat));
+
+        data[i] = Math.round(r * 255);
+        data[i + 1] = Math.round(g * 255);
+        data[i + 2] = Math.round(b * 255);
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      return out;
+    }
+
+    function applyUnsharpMask(sourceCanvas, amount, blurPx) {
+      const w = sourceCanvas.width;
+      const h = sourceCanvas.height;
+      const blurred = document.createElement('canvas');
+      blurred.width = w;
+      blurred.height = h;
+      const bctx = blurred.getContext('2d');
+      bctx.filter = `blur(${blurPx}px)`;
+      bctx.drawImage(sourceCanvas, 0, 0);
+
+      const out = document.createElement('canvas');
+      out.width = w;
+      out.height = h;
+      const octx = out.getContext('2d', { willReadFrequently: true });
+      octx.drawImage(sourceCanvas, 0, 0);
+
+      const srcData = octx.getImageData(0, 0, w, h);
+      const blurData = bctx.getImageData(0, 0, w, h);
+      const src = srcData.data;
+      const blur = blurData.data;
+
+      for (let i = 0; i < src.length; i += 4) {
+        src[i] = clampByte(src[i] + (src[i] - blur[i]) * amount * 0.08);
+        src[i + 1] = clampByte(src[i + 1] + (src[i + 1] - blur[i + 1]) * amount * 0.08);
+        src[i + 2] = clampByte(src[i + 2] + (src[i + 2] - blur[i + 2]) * amount * 0.08);
+      }
+
+      octx.putImageData(srcData, 0, 0);
+      return out;
+    }
+
+    function drawCanvasToCanvas(source, target) {
+      target.width = source.width;
+      target.height = source.height;
+      const ctx = target.getContext('2d');
+      ctx.clearRect(0, 0, target.width, target.height);
+      ctx.drawImage(source, 0, 0);
+    }
+
+    function fitOverlayToCanvas(overlay, canvas) {
+      overlay.style.left = '12px';
+      overlay.style.right = '12px';
+      overlay.style.top = '12px';
+      overlay.style.bottom = '12px';
+    }
+
+
+    const CRC32_TABLE = (() => {
+      const table = new Uint32Array(256);
+      for (let n = 0; n < 256; n++) {
+        let c = n;
+        for (let k = 0; k < 8; k++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[n] = c >>> 0;
+      }
+      return table;
+    })();
+
+    function crc32(bytes) {
+      let crc = 0 ^ (-1);
+      for (let i = 0; i < bytes.length; i++) {
+        crc = (crc >>> 8) ^ CRC32_TABLE[(crc ^ bytes[i]) & 0xFF];
+      }
+      return (crc ^ (-1)) >>> 0;
+    }
+
+    function blobToUint8(blob) {
+      return blob.arrayBuffer().then(buffer => new Uint8Array(buffer));
+    }
+
+    function strToBytes(str) {
+      return new TextEncoder().encode(str);
+    }
+
+    function writeU16(view, offset, value) {
+      view.setUint16(offset, value, true);
+    }
+
+    function writeU32(view, offset, value) {
+      view.setUint32(offset, value >>> 0, true);
+    }
+
+    function getDosDateTime(date = new Date()) {
+      const year = Math.max(1980, date.getFullYear());
+      const dosTime = ((date.getHours() & 0x1F) << 11) | ((date.getMinutes() & 0x3F) << 5) | ((Math.floor(date.getSeconds() / 2)) & 0x1F);
+      const dosDate = (((year - 1980) & 0x7F) << 9) | (((date.getMonth() + 1) & 0x0F) << 5) | (date.getDate() & 0x1F);
+      return { dosTime, dosDate };
+    }
+
+    function concatArrays(parts) {
+      const total = parts.reduce((sum, part) => sum + part.length, 0);
+      const out = new Uint8Array(total);
+      let offset = 0;
+      for (const part of parts) {
+        out.set(part, offset);
+        offset += part.length;
+      }
+      return out;
+    }
+
+    async function createZipBlob(entries) {
+      const localParts = [];
+      const centralParts = [];
+      let offset = 0;
+      const now = getDosDateTime(new Date());
+
+      for (const entry of entries) {
+        const nameBytes = strToBytes(entry.name);
+        const dataBytes = entry.data instanceof Uint8Array ? entry.data : await blobToUint8(entry.data);
+        const checksum = crc32(dataBytes);
+
+        const local = new Uint8Array(30 + nameBytes.length + dataBytes.length);
+        const localView = new DataView(local.buffer);
+        writeU32(localView, 0, 0x04034b50);
+        writeU16(localView, 4, 20);
+        writeU16(localView, 6, 0);
+        writeU16(localView, 8, 0);
+        writeU16(localView, 10, now.dosTime);
+        writeU16(localView, 12, now.dosDate);
+        writeU32(localView, 14, checksum);
+        writeU32(localView, 18, dataBytes.length);
+        writeU32(localView, 22, dataBytes.length);
+        writeU16(localView, 26, nameBytes.length);
+        writeU16(localView, 28, 0);
+        local.set(nameBytes, 30);
+        local.set(dataBytes, 30 + nameBytes.length);
+        localParts.push(local);
+
+        const central = new Uint8Array(46 + nameBytes.length);
+        const centralView = new DataView(central.buffer);
+        writeU32(centralView, 0, 0x02014b50);
+        writeU16(centralView, 4, 20);
+        writeU16(centralView, 6, 20);
+        writeU16(centralView, 8, 0);
+        writeU16(centralView, 10, 0);
+        writeU16(centralView, 12, now.dosTime);
+        writeU16(centralView, 14, now.dosDate);
+        writeU32(centralView, 16, checksum);
+        writeU32(centralView, 20, dataBytes.length);
+        writeU32(centralView, 24, dataBytes.length);
+        writeU16(centralView, 28, nameBytes.length);
+        writeU16(centralView, 30, 0);
+        writeU16(centralView, 32, 0);
+        writeU16(centralView, 34, 0);
+        writeU16(centralView, 36, 0);
+        writeU32(centralView, 38, 0);
+        writeU32(centralView, 42, offset);
+        central.set(nameBytes, 46);
+        centralParts.push(central);
+
+        offset += local.length;
+      }
+
+      const centralDir = concatArrays(centralParts);
+      const end = new Uint8Array(22);
+      const endView = new DataView(end.buffer);
+      writeU32(endView, 0, 0x06054b50);
+      writeU16(endView, 4, 0);
+      writeU16(endView, 6, 0);
+      writeU16(endView, 8, entries.length);
+      writeU16(endView, 10, entries.length);
+      writeU32(endView, 12, centralDir.length);
+      writeU32(endView, 16, offset);
+      writeU16(endView, 20, 0);
+
+      return new Blob([...localParts, centralDir, end], { type: 'application/zip' });
+    }
+
+    async function exportPhotos(photos, zipMode) {
+      const mode = document.getElementById('exportModeSelect').value;
+      const quality = Number(document.getElementById('jpegQualitySelect').value);
+      const sizeModes = mode === 'both' ? ['web', 'portal'] : [mode];
+      const sizes = { web: 2048, portal: 1600 };
+
+      if (!zipMode && photos.length === 1 && sizeModes.length <= 2) {
+        const photo = photos[0];
+        for (const sizeMode of sizeModes) {
+          const canvas = renderToCanvas(photo.image, photo.settings, sizes[sizeMode], true);
+          const blob = await canvasToBlob(canvas, quality);
+          downloadBlob(blob, makeExportName(photo.name, sizeMode));
+        }
+        return;
+      }
+
+      const entries = [];
+      for (const photo of photos) {
+        for (const sizeMode of sizeModes) {
+          const canvas = renderToCanvas(photo.image, photo.settings, sizes[sizeMode], true);
+          const blob = await canvasToBlob(canvas, quality);
+          entries.push({ name: makeExportName(photo.name, sizeMode), data: blob });
+        }
+      }
+
+      const content = await createZipBlob(entries);
+      const suffix = zipMode && photos.every(p => p.status === 'reviewed') ? 'reviewed' : 'export';
+      downloadBlob(content, `property-photo-${suffix}.zip`);
+    }
+
+    function fitMarkupLayerToCanvas() {
+      if (!editedCanvasBox || !editedMarkupLayer || !editedCanvas.width || !editedCanvas.height) {
+        editedMarkupLayer.style.display = 'none';
+        return;
+      }
+      const canvasRect = editedCanvas.getBoundingClientRect();
+      const boxRect = editedCanvasBox.getBoundingClientRect();
+      editedMarkupLayer.style.display = 'block';
+      editedMarkupLayer.style.left = `${canvasRect.left - boxRect.left}px`;
+      editedMarkupLayer.style.top = `${canvasRect.top - boxRect.top}px`;
+      editedMarkupLayer.style.width = `${canvasRect.width}px`;
+      editedMarkupLayer.style.height = `${canvasRect.height}px`;
+    }
+
+    function refreshPromptPanel() {
+      const photo = getCurrentPhoto();
+      const hasPhoto = !!photo;
+      const zones = photo?.aiZones || [];
+      const built = photo?.builtPrompt || '';
+      promptPresetSelect.disabled = !hasPhoto;
+      customChangeInput.disabled = !hasPhoto;
+      promptPresetSelect.value = hasPhoto ? (photo.promptPreset || 'property24') : 'property24';
+      customChangeInput.value = hasPhoto ? (photo.customPrompt || '') : '';
+      promptOutput.value = built;
+      copyPromptBtn.disabled = !hasPhoto;
+      openChatgptBtn.disabled = !hasPhoto;
+      downloadPromptBtn.disabled = !hasPhoto;
+      editedMarkupLayer.classList.toggle('active', !!hasPhoto && state.declutterMode);
+      toggleDeclutterBtn.textContent = state.declutterMode ? 'Stop declutter marking' : 'Start declutter marking';
+
+      if (!hasPhoto) {
+        declutterStatus.textContent = 'No photo loaded yet.';
+        zoneList.innerHTML = '';
+        editedMarkupLayer.classList.remove('active');
+        return;
+      }
+
+      declutterStatus.textContent = zones.length
+        ? `${zones.length} marked zone${zones.length === 1 ? '' : 's'} on this photo.${state.declutterMode ? ' Drag on the edited preview to add more.' : ''}`
+        : (state.declutterMode ? 'Declutter marking is on. Drag on the edited preview to mark a change area.' : 'No declutter zones marked.');
+
+      zoneList.innerHTML = zones.map((zone, idx) => `
+        <div class="zone-item">
+          <div class="zone-item-head">
+            <strong>Zone ${idx + 1}</strong>
+            <span>${escapeHtml(zonePositionLabel(zone))}</span>
+          </div>
+          <input type="text" data-zone-index="${idx}" value="${escapeHtml(zone.label || `Remove clutter in zone ${idx + 1}`)}" />
+          <button class="btn danger" data-remove-zone="${idx}">Remove zone</button>
+        </div>
+      `).join('');
+    }
+
+    function startZoneDraw(e) {
+      if (!state.declutterMode || !getCurrentPhoto()) return;
+      const pt = getLayerPoint(e);
+      if (!pt) return;
+      state.drawStart = pt;
+      state.draftZone = { x: pt.x, y: pt.y, w: 0, h: 0 };
+      renderAiZones();
+    }
+
+    function moveZoneDraw(e) {
+      if (!state.declutterMode || !state.drawStart || !getCurrentPhoto()) return;
+      const pt = getLayerPoint(e);
+      if (!pt) return;
+      state.draftZone = normalizeRect(state.drawStart.x, state.drawStart.y, pt.x, pt.y);
+      renderAiZones();
+    }
+
+    function endZoneDraw(e) {
+      if (!state.declutterMode || !state.drawStart || !getCurrentPhoto()) return;
+      const photo = getCurrentPhoto();
+      const pt = getLayerPoint(e) || state.drawStart;
+      const rect = normalizeRect(state.drawStart.x, state.drawStart.y, pt.x, pt.y);
+      state.drawStart = null;
+      state.draftZone = null;
+      if (rect.w >= 0.03 && rect.h >= 0.03) {
+        photo.aiZones.push({
+          x: rect.x,
+          y: rect.y,
+          w: rect.w,
+          h: rect.h,
+          label: `Remove clutter in ${zonePositionLabel(rect)}`,
+        });
+        photo.builtPrompt = '';
+      }
+      refreshPromptPanel();
+      renderAiZones();
+    }
+
+    function getLayerPoint(e) {
+      const rect = editedMarkupLayer.getBoundingClientRect();
+      if (!rect.width || !rect.height) return null;
+      return {
+        x: clamp01((e.clientX - rect.left) / rect.width),
+        y: clamp01((e.clientY - rect.top) / rect.height),
+      };
+    }
+
+    function normalizeRect(x1, y1, x2, y2) {
+      const x = Math.min(x1, x2);
+      const y = Math.min(y1, y2);
+      const w = Math.abs(x2 - x1);
+      const h = Math.abs(y2 - y1);
+      return { x: clamp01(x), y: clamp01(y), w: clamp01(w), h: clamp01(h) };
+    }
+
+    function renderAiZones() {
+      const photo = getCurrentPhoto();
+      fitMarkupLayerToCanvas();
+      if (!photo || editedMarkupLayer.style.display === 'none') {
+        editedMarkupLayer.innerHTML = '';
+        return;
+      }
+      const zones = [...(photo.aiZones || [])];
+      const html = zones.map((zone, idx) => zoneToHtml(zone, idx + 1, false)).join('')
+        + (state.draftZone ? zoneToHtml(state.draftZone, zones.length + 1, true) : '');
+      editedMarkupLayer.innerHTML = html;
+    }
+
+    function zoneToHtml(zone, number, preview) {
+      const left = clamp01(zone.x) * 100;
+      const top = clamp01(zone.y) * 100;
+      const width = clamp01(zone.w) * 100;
+      const height = clamp01(zone.h) * 100;
+      const label = preview ? 'Drawing zone' : escapeHtml(zone.label || `Zone ${number}`);
+      return `
+        <div class="markup-zone ${preview ? 'preview' : ''}" style="left:${left}%; top:${top}%; width:${width}%; height:${height}%;">
+          <div class="markup-zone-label">${label}</div>
+        </div>
+      `;
+    }
+
+    function zonePositionLabel(zone) {
+      const cx = zone.x + zone.w / 2;
+      const cy = zone.y + zone.h / 2;
+      const vertical = cy < 0.33 ? 'top' : cy > 0.66 ? 'bottom' : 'centre';
+      const horizontal = cx < 0.33 ? 'left' : cx > 0.66 ? 'right' : 'centre';
+      return horizontal === 'centre' && vertical === 'centre'
+        ? 'centre'
+        : `${vertical}-${horizontal}`.replace('centre-', '').replace('-centre', '');
+    }
+
+    function buildChatGptPrompt(photo) {
+      const preset = photo.promptPreset || 'property24';
+      const custom = (photo.customPrompt || '').trim();
+      const zones = photo.aiZones || [];
+      const presetIntro = {
+        property24: 'You are a professional real estate photo editor. Edit this property photo in a clean, realistic Property24-style finish.',
+        luxury: 'You are a premium real estate photo editor. Edit this luxury property photo so it looks polished, bright and high-end, while staying completely realistic.',
+        rental: 'You are a professional rental listing photo editor. Edit this property photo so it feels bright, clean and portal-ready without looking fake.',
+        declutter: 'You are a professional photo editor. Only declutter and lightly clean this property photo while keeping everything structurally identical.',
+        special: 'You are a professional real estate photo editor. Follow the instructions below exactly and keep the final result realistic and listing-ready.',
+      };
+      const presetFocus = {
+        property24: 'Main goal: straighten lines, balance light, clean up small distractions, and keep the result natural.',
+        luxury: 'Main goal: refined premium presentation, subtle contrast, clean surfaces and believable luxury appeal.',
+        rental: 'Main goal: bright rental-portal presentation with realistic light and a clean, welcoming feel.',
+        declutter: 'Main goal: remove only the listed clutter or distractions, with minimal global editing.',
+        special: 'Main goal: make only the requested changes and preserve everything else exactly.',
+      };
+
+      const zoneLines = zones.length
+        ? zones.map((zone, idx) => `- Zone ${idx + 1} (${zonePositionLabel(zone)}): ${zone.label || `Remove clutter in zone ${idx + 1}`}.`).join('\n')
+        : '- No marked declutter zones were added. Use only the written instructions below.';
+
+      const extra = custom
+        ? `Specific extra change instructions:
+${custom}`
+        : `Specific extra change instructions:
+- No extra typed instructions were added beyond the preset and zone list.`;
+
+      return `${presetIntro[preset] || presetIntro.property24}
+
+Use the attached property photo as the source image. ${presetFocus[preset] || presetFocus.property24}
+
+Hard rules:
+- Do not change anything structurally.
+- Do not add, move, or remove walls, windows, doors, rooflines, cupboards, counters, vanities, toilets, showers, baths, built-in fixtures, paving, pools, or permanent features.
+- Do not change paint colours, flooring colours, cabinetry colours, or architectural finishes.
+- Do not change the camera angle or crop aggressively. Keep the same landscape composition and overall framing.
+- Keep the result realistic and professional. No obvious AI look.
+
+Global edits allowed:
+- Straighten verticals and correct mild perspective.
+- Balance exposure, white balance, highlights and shadows.
+- Clean up the image, improve clarity slightly, and keep colours natural.
+- Do very light decluttering only where requested below.
+
+Declutter or change zones:
+${zoneLines}
+
+${extra}
+
+Output requirement:
+- Return one final edited image only, in the same aspect ratio, suitable for a South African property listing.
+- Preserve every important property feature exactly unless it was specifically listed above as clutter to remove.`;
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const input = document.createElement('textarea');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        input.remove();
+      }
+    }
+
+    function getCurrentPhoto() {
+      return state.photos.find(photo => photo.id === state.currentId) || null;
+    }
+
+    function clearQueue() {
+      state.photos.forEach(photo => URL.revokeObjectURL(photo.thumbUrl));
+      state.photos = [];
+      state.currentId = null;
+      state.copiedSettings = null;
+      state.declutterMode = false;
+      state.drawStart = null;
+      state.draftZone = null;
+      queueList.innerHTML = '';
+      originalCanvas.width = 0;
+      originalCanvas.height = 0;
+      editedCanvas.width = 0;
+      editedCanvas.height = 0;
+      refreshUI();
+      refreshQueue();
+    }
+
+    function buildAnalysisHtml(photo) {
+      if (!photo.stats) return '<strong>Analyzing…</strong>';
+      const s = photo.stats;
+      const scene = s.outdoorLikelihood > 0.45 ? 'Likely exterior photo.' : 'Likely interior photo.';
+      const light = s.avgLum < 105 ? 'Room appears a bit dark.' : s.avgLum > 165 ? 'Image is already bright.' : 'Exposure sits in a usable middle range.';
+      const wb = s.whiteBalanceBias > 12 ? 'Warm cast detected.' : s.whiteBalanceBias < -12 ? 'Cool cast detected.' : 'Colour balance looks fairly neutral.';
+      const readyLine = photo.autoEdited
+        ? `<strong>Auto edit applied:</strong> Exposure ${signed(photo.settings.exposure)}, Shadows ${signed(photo.settings.shadows)}, Highlights ${signed(photo.settings.highlights)}, Warmth ${signed(photo.settings.warmth)}.`
+        : `<strong>Next step:</strong> Choose an auto-edit strength and click <em>Run auto edit</em> so the edited preview actually changes.`;
+      return `
+        <strong>${scene}</strong><br>
+        ${light} ${wb}<br><br>
+        ${readyLine}<br>
+        Use the grid before exporting if walls or door frames still look off.
+      `;
+    }
+
+    function describePhoto(stats) {
+      const type = stats.outdoorLikelihood > 0.45 ? 'Exterior' : 'Interior';
+      const tone = stats.avgLum < 105 ? 'dark' : stats.avgLum > 165 ? 'bright' : 'balanced';
+      return `${type} • ${tone} light`;
+    }
+
+    function labelStatus(status) {
+      if (status === 'reviewed') return 'Reviewed';
+      if (status === 'ready') return 'Ready';
+      return 'Pending';
+    }
+
+    function makeExportName(name, mode) {
+      const base = name.replace(/\.[^.]+$/, '');
+      return `${base}_${mode}.jpg`;
+    }
+
+    function loadImage(file) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    function canvasToBlob(canvas, quality) {
+      return new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function signed(value) {
+      return `${value > 0 ? '+' : ''}${value}`;
+    }
+
+    function signedFixed(value) {
+      const num = Number(value);
+      return `${num > 0 ? '+' : ''}${num.toFixed(1)}`;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function clamp01(value) {
+      return Math.max(0, Math.min(1, value));
+    }
+
+    function clampByte(value) {
+      return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+    }
+  </script>
 </body>
 </html>
