@@ -71,7 +71,7 @@
       position: relative;
       overflow: hidden;
       display: grid;
-      grid-template-columns: 1.6fr 1fr;
+      grid-template-columns: 1fr;
       gap: 22px;
       padding: 28px;
       border-radius: var(--radius-xl);
@@ -388,14 +388,26 @@
       max-height: 100%;
       border-radius: 18px;
       box-shadow: 0 24px 60px rgba(0,0,0,.24);
+    }
+    #originalCanvas {
+      z-index: 1;
       background: #09172f;
     }
-    #editedCanvas { clip-path: inset(0 0 0 50%); }
+    #editedCanvas {
+      z-index: 2;
+      background: transparent;
+      clip-path: inset(0 0 0 50%);
+    }
+    #overlayCanvas {
+      z-index: 3;
+      background: transparent;
+    }
     .compare-handle {
       position: absolute;
       top: 0;
       bottom: 0;
       width: 0;
+      z-index: 4;
       border-left: 2px solid rgba(255,255,255,.85);
       pointer-events: none;
       filter: drop-shadow(0 0 10px rgba(22,152,255,.65));
@@ -638,12 +650,7 @@
           A premium real-estate photo workflow built for fast safe edits, declutter brief creation, and clean ChatGPT handoff for detailed image changes. Keep your listing photos realistic, blue-chip professional, and ready for review before export.
         </p>
       </div>
-      <div class="hero-right">
-        <div class="stat"><div class="k">Safe edit engine</div><div class="v">1-click base edit</div><small>Auto polish, manual refinement, and export for portal or web.</small></div>
-        <div class="stat"><div class="k">Advanced handoff</div><div class="v">ChatGPT-ready brief</div><small>Mark zones, describe changes, then open ChatGPT with a polished prompt.</small></div>
-        <div class="stat"><div class="k">Brand look</div><div class="v">Deep Blue Lily</div><small>All cream removed. Stronger blues, cleaner glass panels, premium contrast.</small></div>
-        <div class="stat"><div class="k">Review workflow</div><div class="v">Before / after</div><small>Compare slider, reviewed flags, notes, and batch export support.</small></div>
-      </div>
+
     </section>
 
     <div class="layout">
@@ -1088,7 +1095,7 @@
         });
       }
       if (state.currentIndex === -1 && state.photos.length) state.currentIndex = 0;
-      els.uploadStatus.textContent = `${valid.length} image${valid.length > 1 ? 's' : ''} loaded. Select a photo and run auto edit.`;
+      els.uploadStatus.textContent = `${valid.length} image${valid.length > 1 ? 's' : ''} loaded. Select a photo and run auto edit. Preview now draws immediately after upload.`;
       refreshAll();
       renderCurrent();
     }
@@ -1214,7 +1221,7 @@
         setStageMessage(true);
         els.stageFileName.textContent = 'No image selected';
         els.stageMeta.textContent = 'Upload photos to begin. Safe edits stay local. Advanced edits are handed off cleanly to ChatGPT.';
-        [els.originalCanvas, els.editedCanvas, els.overlayCanvas].forEach(c => { c.width = c.height = 1; c.style.width = '1px'; c.style.height = '1px'; });
+        [els.originalCanvas, els.editedCanvas, els.overlayCanvas].forEach(c => { const ctx = c.getContext('2d'); if (ctx) ctx.clearRect(0,0,c.width,c.height); c.width = c.height = 1; c.style.width = '1px'; c.style.height = '1px'; });
         return;
       }
       setStageMessage(false);
