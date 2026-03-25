@@ -1,29 +1,25 @@
-Property Photo Review Editor
+Blue Lily Photo Review App
 
-What it does
-- Upload multiple JPEG, PNG or WebP images
-- Auto-suggest balanced starting edits per photo
-- Review one photo at a time
-- Side-by-side original and edited preview
-- Alignment grid for straighten/perspective review
-- Manual controls for exposure, shadows, highlights, warmth, saturation, vibrance, clarity, sharpen, straighten and perspective
-- Apply current settings to all photos
-- Mark photos as reviewed
-- Export current photo, reviewed photos, or all photos
-- Export web size, portal size, or both
-- ZIP export for batches
+Files included:
+- index.html
+- styles.css
+- script.js
 
-What it does NOT do
-- Remove fixtures or objects intelligently
-- Change structure
-- Replace skies
-- Do full AI staging
-- Guarantee perfect automatic perspective correction
+What this version does:
+- Upload photo
+- Show original on the left
+- Show edited result on the right
+- Approve, re-edit, or download
+- Soft light-blue interface
+- Mobile-friendly layout
 
-Use notes
-- For best results, review every image before exporting.
-- Straighten and perspective controls are designed to help, not to guess perfectly.
-- ZIP export uses JSZip from a CDN, so the app should be opened with internet access the first time.
+Important:
+This zip contains the front-end review flow only.
+The current "edit" action is a placeholder preview flow and shows the uploaded image in the edited panel.
+To perform real edits, connect the Run Edit button to your preferred image editing backend or ChatGPT image workflow.
 
-Files
-- index.html = the app
+How to use:
+1. Unzip the folder
+2. Open index.html in a browser
+or
+3. Upload the files to GitHub / Netlify
