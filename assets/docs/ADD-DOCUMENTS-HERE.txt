@@ -1,0 +1,1 @@
+Place the Blue Lily document files in this folder using the filenames listed in README.txt.
